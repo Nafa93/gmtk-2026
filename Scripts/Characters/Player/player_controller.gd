@@ -13,6 +13,9 @@ func _physics_process(_delta: float) -> void:
 	rotation = movement_component.get_rotation(global_position, aim_position)
 
 	if weapon_component != null:
+		if Input.is_action_just_pressed(&"CHANGE_WEAPON"):
+			weapon_component.switch_weapon()
+
 		weapon_component.handle_attack_input(
 			self,
 			Input.is_action_pressed(&"SHOOT"),

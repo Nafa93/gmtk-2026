@@ -17,14 +17,14 @@ muzzle_flash = NodePath("MuzzleFlash")
 texture = SubResource("PlaceholderTexture2D_weapon")
 
 [node name="Muzzle" type="Marker2D" parent="."]
-position = Vector2(28, 0)
+position = Vector2(0, -28)
 
 [node name="FireAudio" type="AudioStreamPlayer2D" parent="."]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="MuzzleFlash" type="GPUParticles2D" parent="."]
-position = Vector2(28, 0)
+position = Vector2(0, -28)
 emitting = false
 amount = 4
 lifetime = 0.12

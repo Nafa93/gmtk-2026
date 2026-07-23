@@ -1,11 +1,19 @@
 class_name WeaponComponent
 extends Node
 
+signal weapon_equipped(slot: int, weapon: Weapon)
+signal weapon_switched(active_weapon: Weapon, secondary_weapon: Weapon)
+
+const SLOT_COUNT: int = 2
+
 @export var weapon_holder: Node2D
+@export_range(0, 1, 1) var active_slot_index: int = 0
 
 var current_weapon: Weapon
+var secondary_weapon: Weapon
 
-var _cooldown_remaining: float = 0.0
+var _weapons: Array[Weapon] = [null, null]
+var _cooldowns: Array[float] = [0.0, 0.0]
 var _attack_was_pressed: bool = false
 
 
@@ -14,42 +22,93 @@ func _ready() -> void:
 		push_error("WeaponComponent requires a WeaponHolder Node2D.")
 		return
 
+	var discovered_slot: int = 0
 	for child: Node in weapon_holder.get_children():
-		if child is Weapon:
-			current_weapon = child as Weapon
-			return
+		if not child is Weapon:
+			continue
+
+		if discovered_slot >= SLOT_COUNT:
+			push_warning(
+				"WeaponHolder contains more than two Weapon nodes; '%s' was removed."
+				% child.name
+			)
+			child.free()
+			continue
+
+		_weapons[discovered_slot] = child as Weapon
+		discovered_slot += 1
+
+	_refresh_weapon_states()
 
 
 func _physics_process(delta: float) -> void:
-	_cooldown_remaining = maxf(_cooldown_remaining - delta, 0.0)
+	for slot: int in range(SLOT_COUNT):
+		_cooldowns[slot] = maxf(_cooldowns[slot] - delta, 0.0)
 
 
-func equip_weapon(scene: PackedScene) -> bool:
+func equip_weapon(weapon_scene: PackedScene, slot: int = 0) -> bool:
+	if not _is_valid_slot(slot):
+		push_error("WeaponComponent slot must be 0 or 1; received %d." % slot)
+		return false
+
 	if weapon_holder == null:
 		push_error("WeaponComponent cannot equip a weapon without a WeaponHolder.")
 		return false
 
-	if scene == null:
+	if weapon_scene == null:
 		push_error("WeaponComponent cannot equip a null PackedScene.")
 		return false
 
-	var weapon_node: Node = scene.instantiate()
+	var weapon_node: Node = weapon_scene.instantiate()
 	var new_weapon: Weapon = weapon_node as Weapon
 	if new_weapon == null:
 		weapon_node.free()
 		push_error("Equipped scene root must extend Weapon.")
 		return false
 
-	if current_weapon != null and is_instance_valid(current_weapon):
-		if current_weapon.get_parent() != null:
-			current_weapon.get_parent().remove_child(current_weapon)
-		current_weapon.queue_free()
+	var replaced_weapon: Weapon = _weapons[slot]
+	if replaced_weapon != null and is_instance_valid(replaced_weapon):
+		replaced_weapon.deactivate()
+		replaced_weapon.free()
 
 	weapon_holder.add_child(new_weapon)
-	current_weapon = new_weapon
-	_cooldown_remaining = 0.0
-	_attack_was_pressed = false
+	_weapons[slot] = new_weapon
+	_cooldowns[slot] = 0.0
+	_refresh_weapon_states()
+	weapon_equipped.emit(slot, new_weapon)
 	return true
+
+
+func switch_weapon() -> bool:
+	var other_slot: int = 1 - active_slot_index
+	var other_weapon: Weapon = _weapons[other_slot]
+
+	if other_weapon == null or not is_instance_valid(other_weapon):
+		push_warning(
+			"WeaponComponent cannot switch because slot %d is empty." % other_slot
+		)
+		return false
+
+	active_slot_index = other_slot
+	_refresh_weapon_states()
+	weapon_switched.emit(current_weapon, secondary_weapon)
+	return true
+
+
+func get_active_weapon() -> Weapon:
+	return current_weapon
+
+
+func get_secondary_weapon() -> Weapon:
+	return secondary_weapon
+
+
+func get_weapon_in_slot(slot: int) -> Weapon:
+	if not _is_valid_slot(slot):
+		push_error("WeaponComponent slot must be 0 or 1; received %d." % slot)
+		return null
+
+	return _weapons[slot]
 
 
 func handle_attack_input(
@@ -58,7 +117,7 @@ func handle_attack_input(
 	aim_position: Vector2,
 	aim_direction: Vector2 = Vector2.ZERO
 ) -> bool:
-	var weapon_data: WeaponData = _get_current_data()
+	var weapon_data: WeaponData = _get_active_data()
 	var should_try_attack: bool = false
 
 	if weapon_data == null:
@@ -85,21 +144,22 @@ func try_attack(
 		push_error("WeaponComponent cannot attack without an owner.")
 		return false
 
-	if current_weapon == null or not is_instance_valid(current_weapon):
-		push_warning("WeaponComponent on '%s' has no Weapon equipped." % owner.name)
+	var active_weapon: Weapon = get_active_weapon()
+	if active_weapon == null or not is_instance_valid(active_weapon):
+		push_warning("WeaponComponent on '%s' has no active Weapon." % owner.name)
 		return false
 
-	var weapon_data: WeaponData = current_weapon.data
+	var weapon_data: WeaponData = active_weapon.data
 	if weapon_data == null:
-		push_warning("Weapon '%s' has no WeaponData assigned." % current_weapon.name)
+		push_warning("Weapon '%s' has no WeaponData assigned." % active_weapon.name)
 		return false
 
 	if weapon_data.attack_behavior == null:
 		push_error("WeaponData '%s' has no AttackBehavior assigned." % weapon_data.weapon_name)
 		return false
 
-	if current_weapon.muzzle == null:
-		push_error("Weapon '%s' has no Muzzle Marker2D assigned." % current_weapon.name)
+	if active_weapon.muzzle == null:
+		push_error("Weapon '%s' has no Muzzle Marker2D assigned." % active_weapon.name)
 		return false
 
 	if weapon_data.attacks_per_second <= 0.0:
@@ -109,10 +169,10 @@ func try_attack(
 		)
 		return false
 
-	if _cooldown_remaining > 0.0:
+	if _cooldowns[active_slot_index] > 0.0:
 		return false
 
-	var attack_position: Vector2 = current_weapon.get_muzzle_position()
+	var attack_position: Vector2 = active_weapon.get_muzzle_position()
 	var resolved_direction: Vector2 = aim_direction.normalized()
 	if resolved_direction.is_zero_approx():
 		resolved_direction = attack_position.direction_to(aim_position)
@@ -132,33 +192,55 @@ func try_attack(
 	)
 
 	var attack_interval: float = 1.0 / weapon_data.attacks_per_second
-	_cooldown_remaining = attack_interval
-	current_weapon.play_fire_effects()
+	_cooldowns[active_slot_index] = attack_interval
+	active_weapon.play_fire_effects()
 	return true
 
 
 func attack(owner: Node2D) -> void:
-	if current_weapon == null or not is_instance_valid(current_weapon):
-		push_error("WeaponComponent cannot use attack() without an equipped Weapon.")
+	var active_weapon: Weapon = get_active_weapon()
+	if active_weapon == null or not is_instance_valid(active_weapon):
+		push_error("WeaponComponent cannot use attack() without an active Weapon.")
 		return
 
-	var fallback_direction: Vector2 = current_weapon.get_muzzle_direction()
+	var fallback_direction: Vector2 = active_weapon.get_muzzle_direction()
 	try_attack(
 		owner,
-		current_weapon.get_muzzle_position() + fallback_direction,
+		active_weapon.get_muzzle_position() + fallback_direction,
 		fallback_direction
 	)
 
 
 func get_attack_origin() -> Marker2D:
-	if current_weapon == null or not is_instance_valid(current_weapon):
+	var active_weapon: Weapon = get_active_weapon()
+	if active_weapon == null or not is_instance_valid(active_weapon):
 		return null
 
-	return current_weapon.muzzle
+	return active_weapon.muzzle
 
 
-func _get_current_data() -> WeaponData:
-	if current_weapon == null or not is_instance_valid(current_weapon):
+func _refresh_weapon_states() -> void:
+	current_weapon = _weapons[active_slot_index]
+	secondary_weapon = _weapons[1 - active_slot_index]
+
+	for slot: int in range(SLOT_COUNT):
+		var weapon: Weapon = _weapons[slot]
+		if weapon == null or not is_instance_valid(weapon):
+			continue
+
+		if slot == active_slot_index:
+			weapon.activate()
+		else:
+			weapon.deactivate()
+
+
+func _get_active_data() -> WeaponData:
+	var active_weapon: Weapon = get_active_weapon()
+	if active_weapon == null or not is_instance_valid(active_weapon):
 		return null
 
-	return current_weapon.data
+	return active_weapon.data
+
+
+func _is_valid_slot(slot: int) -> bool:
+	return slot >= 0 and slot < SLOT_COUNT

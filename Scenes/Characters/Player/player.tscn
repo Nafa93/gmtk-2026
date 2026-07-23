@@ -6,7 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://d1vgehjd4i5m0" path="res://Scenes/Components/movement_component.tscn" id="3_gy20a"]
 [ext_resource type="PackedScene" uid="uid://cercmh2airn6b" path="res://Scenes/Characters/Player/player_movement_behavior.tscn" id="4_cqrjx"]
 [ext_resource type="Script" uid="uid://dtd8t6phop544" path="res://Scripts/Components/weapon_component.gd" id="5_weapon_component"]
-[ext_resource type="PackedScene" uid="uid://d0fmnxqctl5qd" path="res://Scenes/Weapons/Shotgun.tscn" id="6_dxcao"]
+[ext_resource type="PackedScene" uid="uid://cs2x82cf7p53p" path="res://Scenes/Weapons/Pistol.tscn" id="6_pistol"]
+[ext_resource type="PackedScene" uid="uid://d0fmnxqctl5qd" path="res://Scenes/Weapons/Shotgun.tscn" id="7_shotgun"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
 radius = 62.169125
@@ -33,11 +34,14 @@ behavior = NodePath("../PlayerMovementBehavior")
 [node name="WeaponHolder" type="Node2D" parent="." unique_id=749241834]
 position = Vector2(63, -1)
 
-[node name="Shotgun" parent="WeaponHolder" unique_id=1730035711 instance=ExtResource("6_dxcao")]
+[node name="Pistol" parent="WeaponHolder" instance=ExtResource("6_pistol")]
+
+[node name="Shotgun" parent="WeaponHolder" instance=ExtResource("7_shotgun")]
 
 [node name="WeaponComponent" type="Node" parent="." unique_id=1996894831 node_paths=PackedStringArray("weapon_holder")]
 script = ExtResource("5_weapon_component")
 weapon_holder = NodePath("../WeaponHolder")
+active_slot_index = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1155133397]
 shape = SubResource("CircleShape2D_cqrjx")
