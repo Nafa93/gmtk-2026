@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cwihxiod5ahq8"]
+
+[ext_resource type="Script" uid="uid://dd3wvka22xl6" path="res://Scripts/Characters/Enemies/doppelganger_controller.gd" id="1_m75j8"]
+[ext_resource type="SpriteFrames" uid="uid://v1d01hhike0o" path="res://Assets/doppelganger.tres" id="1_tm0ve"]
+[ext_resource type="PackedScene" uid="uid://cpatfwaguns1k" path="res://Scenes/Components/health_component.tscn" id="3_m75j8"]
+[ext_resource type="PackedScene" uid="uid://d1vgehjd4i5m0" path="res://Scenes/Components/movement_component.tscn" id="4_gxxus"]
+[ext_resource type="PackedScene" uid="uid://bdtgtan1g2w43" path="res://Scenes/Characters/Enemies/doppelganger_movement_behavior.tscn" id="5_gxxus"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4fyov"]
+radius = 63.1981
+
+[node name="Doppelganger" type="CharacterBody2D" unique_id=131484088 node_paths=PackedStringArray("health_component", "movement_component") groups=["enemy"]]
+script = ExtResource("1_m75j8")
+health_component = NodePath("HealthComponent")
+movement_component = NodePath("MovementComponent")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=122115431]
+sprite_frames = ExtResource("1_tm0ve")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1342357277]
+shape = SubResource("CircleShape2D_4fyov")
+
+[node name="HealthComponent" parent="." unique_id=1478811520 instance=ExtResource("3_m75j8")]
+
+[node name="MovementComponent" parent="." unique_id=344136830 node_paths=PackedStringArray("behavior") instance=ExtResource("4_gxxus")]
+behavior = NodePath("../DoppelgangerMovementBehavior")
+
+[node name="DoppelgangerMovementBehavior" parent="." unique_id=1056250388 instance=ExtResource("5_gxxus")]

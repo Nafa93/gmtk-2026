@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bdtgtan1g2w43"]
+
+[ext_resource type="Script" uid="uid://die4jokn2ek2v" path="res://Scripts/Characters/Enemies/doppelganger_movement_behavior.gd" id="1_4x361"]
+
+[node name="DoppelgangerMovementBehavior" type="Node" unique_id=1056250388]
+script = ExtResource("1_4x361")

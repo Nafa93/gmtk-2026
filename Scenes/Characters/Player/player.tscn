@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://bk3rtxa1ypj1p"]
 
-[ext_resource type="Script" uid="uid://dtiefpuuoq0he" path="res://Scripts/Characters/player_controller.gd" id="1_cqrjx"]
-[ext_resource type="SpriteFrames" uid="uid://b8f85bllyovmj" path="res://Assets/temp_player.tres" id="1_v0iea"]
+[ext_resource type="Script" uid="uid://dtiefpuuoq0he" path="res://Scripts/Characters/Player/player_controller.gd" id="1_cqrjx"]
+[ext_resource type="SpriteFrames" uid="uid://b8f85bllyovmj" path="res://Assets/player.tres" id="1_v0iea"]
 [ext_resource type="PackedScene" uid="uid://cpatfwaguns1k" path="res://Scenes/Components/health_component.tscn" id="2_40svl"]
 [ext_resource type="PackedScene" uid="uid://d1vgehjd4i5m0" path="res://Scenes/Components/movement_component.tscn" id="3_gy20a"]
-[ext_resource type="PackedScene" uid="uid://cercmh2airn6b" path="res://Scenes/Components/player_movement_behavior.tscn" id="4_cqrjx"]
+[ext_resource type="PackedScene" uid="uid://cercmh2airn6b" path="res://Scenes/Characters/Player/player_movement_behavior.tscn" id="4_cqrjx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
 radius = 62.169125
 
-[node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component")]
+[node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component") groups=["player"]]
 script = ExtResource("1_cqrjx")
 movement_component = NodePath("MovementComponent")
 health_component = NodePath("HealthComponent")
