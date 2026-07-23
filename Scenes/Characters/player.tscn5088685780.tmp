@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bk3rtxa1ypj1p"]
+
+[ext_resource type="Script" uid="uid://dtiefpuuoq0he" path="res://Scripts/Characters/player_controller.gd" id="1_cqrjx"]
+[ext_resource type="SpriteFrames" uid="uid://b8f85bllyovmj" path="res://Assets/temp_player.tres" id="1_v0iea"]
+[ext_resource type="PackedScene" uid="uid://cpatfwaguns1k" path="res://Scenes/Components/health_component.tscn" id="2_40svl"]
+[ext_resource type="PackedScene" uid="uid://d1vgehjd4i5m0" path="res://Scenes/Components/movement_component.tscn" id="3_gy20a"]
+[ext_resource type="PackedScene" uid="uid://cercmh2airn6b" path="res://Scenes/Components/player_movement_behavior.tscn" id="4_cqrjx"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
+radius = 62.514
+
+[node name="Player" type="CharacterBody2D" unique_id=578521508 node_paths=PackedStringArray("movement_component", "health_component")]
+script = ExtResource("1_cqrjx")
+movement_component = NodePath("MovementComponent")
+health_component = NodePath("HealthComponent")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1899952837]
+sprite_frames = ExtResource("1_v0iea")
+
+[node name="HealthComponent" parent="." unique_id=1478811520 instance=ExtResource("2_40svl")]
+
+[node name="MovementComponent" parent="." unique_id=344136830 node_paths=PackedStringArray("behavior") instance=ExtResource("3_gy20a")]
+behavior = NodePath("../PlayerMovementBehavior")
+
+[node name="PlayerMovementBehavior" parent="." unique_id=1758293071 instance=ExtResource("4_cqrjx")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=471852124]
+shape = SubResource("CircleShape2D_cqrjx")
