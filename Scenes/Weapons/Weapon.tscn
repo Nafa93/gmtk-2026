@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Weapons/Weapon.gd" id="1_weapon"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_weapon"]
+size = Vector2(40, 14)
+
+[node name="Weapon" type="Node2D" node_paths=PackedStringArray("weapon_sprite", "muzzle", "fire_audio", "animation_player", "muzzle_flash")]
+script = ExtResource("1_weapon")
+weapon_sprite = NodePath("Sprite2D")
+muzzle = NodePath("Muzzle")
+fire_audio = NodePath("FireAudio")
+animation_player = NodePath("AnimationPlayer")
+muzzle_flash = NodePath("MuzzleFlash")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("PlaceholderTexture2D_weapon")
+
+[node name="Muzzle" type="Marker2D" parent="."]
+position = Vector2(28, 0)
+
+[node name="FireAudio" type="AudioStreamPlayer2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="MuzzleFlash" type="GPUParticles2D" parent="."]
+position = Vector2(28, 0)
+emitting = false
+amount = 4
+lifetime = 0.12
+one_shot = true
+explosiveness = 1.0

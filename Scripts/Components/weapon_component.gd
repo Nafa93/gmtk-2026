@@ -1,20 +1,55 @@
 class_name WeaponComponent
 extends Node
 
-@export var weapon: WeaponData:
-	set(value):
-		weapon = value
-		_cooldown_remaining = 0.0
-		_attack_was_pressed = false
+@export var weapon_holder: Node2D
 
-@export var muzzle: Marker2D
+var current_weapon: Weapon
 
 var _cooldown_remaining: float = 0.0
 var _attack_was_pressed: bool = false
 
 
+func _ready() -> void:
+	if weapon_holder == null:
+		push_error("WeaponComponent requires a WeaponHolder Node2D.")
+		return
+
+	for child: Node in weapon_holder.get_children():
+		if child is Weapon:
+			current_weapon = child as Weapon
+			return
+
+
 func _physics_process(delta: float) -> void:
 	_cooldown_remaining = maxf(_cooldown_remaining - delta, 0.0)
+
+
+func equip_weapon(scene: PackedScene) -> bool:
+	if weapon_holder == null:
+		push_error("WeaponComponent cannot equip a weapon without a WeaponHolder.")
+		return false
+
+	if scene == null:
+		push_error("WeaponComponent cannot equip a null PackedScene.")
+		return false
+
+	var weapon_node: Node = scene.instantiate()
+	var new_weapon: Weapon = weapon_node as Weapon
+	if new_weapon == null:
+		weapon_node.free()
+		push_error("Equipped scene root must extend Weapon.")
+		return false
+
+	if current_weapon != null and is_instance_valid(current_weapon):
+		if current_weapon.get_parent() != null:
+			current_weapon.get_parent().remove_child(current_weapon)
+		current_weapon.queue_free()
+
+	weapon_holder.add_child(new_weapon)
+	current_weapon = new_weapon
+	_cooldown_remaining = 0.0
+	_attack_was_pressed = false
+	return true
 
 
 func handle_attack_input(
@@ -23,11 +58,12 @@ func handle_attack_input(
 	aim_position: Vector2,
 	aim_direction: Vector2 = Vector2.ZERO
 ) -> bool:
+	var weapon_data: WeaponData = _get_current_data()
 	var should_try_attack: bool = false
 
-	if weapon == null:
+	if weapon_data == null:
 		should_try_attack = is_pressed and not _attack_was_pressed
-	elif weapon.automatic:
+	elif weapon_data.automatic:
 		should_try_attack = is_pressed
 	else:
 		should_try_attack = is_pressed and not _attack_was_pressed
@@ -49,31 +85,37 @@ func try_attack(
 		push_error("WeaponComponent cannot attack without an owner.")
 		return false
 
-	if weapon == null:
-		push_warning("WeaponComponent on '%s' has no WeaponData assigned." % owner.name)
+	if current_weapon == null or not is_instance_valid(current_weapon):
+		push_warning("WeaponComponent on '%s' has no Weapon equipped." % owner.name)
 		return false
 
-	if weapon.attack_behavior == null:
-		push_error("WeaponData '%s' has no AttackBehavior assigned." % weapon.weapon_name)
+	var weapon_data: WeaponData = current_weapon.data
+	if weapon_data == null:
+		push_warning("Weapon '%s' has no WeaponData assigned." % current_weapon.name)
 		return false
 
-	if muzzle == null:
-		push_error("WeaponComponent on '%s' has no muzzle Marker2D assigned." % owner.name)
+	if weapon_data.attack_behavior == null:
+		push_error("WeaponData '%s' has no AttackBehavior assigned." % weapon_data.weapon_name)
 		return false
 
-	if weapon.attacks_per_second <= 0.0:
+	if current_weapon.muzzle == null:
+		push_error("Weapon '%s' has no Muzzle Marker2D assigned." % current_weapon.name)
+		return false
+
+	if weapon_data.attacks_per_second <= 0.0:
 		push_error(
 			"WeaponData '%s' must have attacks_per_second greater than zero."
-			% weapon.weapon_name
+			% weapon_data.weapon_name
 		)
 		return false
 
 	if _cooldown_remaining > 0.0:
 		return false
 
+	var attack_position: Vector2 = current_weapon.get_muzzle_position()
 	var resolved_direction: Vector2 = aim_direction.normalized()
 	if resolved_direction.is_zero_approx():
-		resolved_direction = muzzle.global_position.direction_to(aim_position)
+		resolved_direction = attack_position.direction_to(aim_position)
 
 	if resolved_direction.is_zero_approx():
 		push_warning(
@@ -82,30 +124,41 @@ func try_attack(
 		)
 		return false
 
-	weapon.attack_behavior.attack(
+	weapon_data.attack_behavior.attack(
 		owner,
-		weapon,
-		muzzle.global_position,
+		weapon_data,
+		attack_position,
 		resolved_direction
 	)
 
-	var attack_interval: float = 1.0 / weapon.attacks_per_second
+	var attack_interval: float = 1.0 / weapon_data.attacks_per_second
 	_cooldown_remaining = attack_interval
+	current_weapon.play_fire_effects()
 	return true
 
 
 func attack(owner: Node2D) -> void:
-	if muzzle == null:
-		push_error("WeaponComponent cannot use attack() without a muzzle Marker2D.")
+	if current_weapon == null or not is_instance_valid(current_weapon):
+		push_error("WeaponComponent cannot use attack() without an equipped Weapon.")
 		return
 
-	var fallback_direction: Vector2 = muzzle.global_transform.x.normalized()
+	var fallback_direction: Vector2 = current_weapon.get_muzzle_direction()
 	try_attack(
 		owner,
-		muzzle.global_position + fallback_direction,
+		current_weapon.get_muzzle_position() + fallback_direction,
 		fallback_direction
 	)
 
 
 func get_attack_origin() -> Marker2D:
-	return muzzle
+	if current_weapon == null or not is_instance_valid(current_weapon):
+		return null
+
+	return current_weapon.muzzle
+
+
+func _get_current_data() -> WeaponData:
+	if current_weapon == null or not is_instance_valid(current_weapon):
+		return null
+
+	return current_weapon.data

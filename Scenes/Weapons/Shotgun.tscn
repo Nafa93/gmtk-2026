@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://d0fmnxqctl5qd"]
+
+[ext_resource type="PackedScene" path="res://Scenes/Weapons/Weapon.tscn" id="1_weapon"]
+[ext_resource type="Resource" path="res://Resources/Weapons/shotgun.tres" id="2_data"]
+
+[node name="Shotgun" unique_id=554222346 instance=ExtResource("1_weapon")]
+data = ExtResource("2_data")
+
+[node name="Sprite2D" parent="." index="0"]
+position = Vector2(-0.5, -23)
+scale = Vector2(0.275, 4.2857146)
+
+[node name="Muzzle" parent="." index="1"]
+position = Vector2(0, -53)
+
+[node name="MuzzleFlash" parent="." index="4"]
+position = Vector2(0, -53)

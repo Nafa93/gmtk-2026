@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cs2x82cf7p53p"]
+
+[ext_resource type="PackedScene" path="res://Scenes/Weapons/Weapon.tscn" id="1_weapon"]
+[ext_resource type="Resource" path="res://Resources/Weapons/pistol.tres" id="2_data"]
+
+[node name="Pistol" unique_id=1234201951 instance=ExtResource("1_weapon")]
+data = ExtResource("2_data")
+
+[node name="Sprite2D" parent="." index="0"]
+position = Vector2(-2.3841858e-07, -10.999999)
+scale = Vector2(0.2, 2.5714288)
+
+[node name="Muzzle" parent="." index="1"]
+position = Vector2(0, -30)
+
+[node name="MuzzleFlash" parent="." index="4"]
+position = Vector2(0, -30)
