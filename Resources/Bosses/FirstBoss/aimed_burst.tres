@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="BossAimedBurstAttack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Bosses/Attacks/BossAimedBurstAttack.gd" id="1_attack"]
+
+[resource]
+script = ExtResource("1_attack")
+attack_name = "Aimed Burst"
+selection_weight = 1.4
+cooldown = 2.0
+minimum_distance = 140.0
+maximum_distance = 900.0
+telegraph_duration = 0.8
+recovery_duration = 0.7
+telegraph_color = Color(1, 0.2, 0.1, 0.65)
+burst_count = 3
+shot_interval = 0.18
+projectile_speed = 520.0
+damage = 1
+phase_two_burst_bonus = 2
+phase_two_interval_multiplier = 0.75

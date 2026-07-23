@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BossChargeAttack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Bosses/Attacks/BossChargeAttack.gd" id="1_attack"]
+
+[resource]
+script = ExtResource("1_attack")
+attack_name = "Locked Charge"
+selection_weight = 1.0
+cooldown = 3.5
+minimum_distance = 180.0
+maximum_distance = 850.0
+telegraph_duration = 0.9
+recovery_duration = 1.0
+telegraph_color = Color(1, 0.75, 0.1, 0.55)
+charge_speed = 720.0
+maximum_duration = 0.85
+maximum_distance = 500.0
+contact_damage = 2
+phase_two_speed_multiplier = 1.35
