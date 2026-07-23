@@ -1,18 +1,23 @@
-[gd_scene format=3 uid="uid://bk3rtxa1ypj1p"]
+[gd_scene load_steps=9 format=3 uid="uid://bk3rtxa1ypj1p"]
 
 [ext_resource type="Script" uid="uid://dtiefpuuoq0he" path="res://Scripts/Characters/Player/player_controller.gd" id="1_cqrjx"]
 [ext_resource type="SpriteFrames" uid="uid://b8f85bllyovmj" path="res://Assets/player.tres" id="1_v0iea"]
 [ext_resource type="PackedScene" uid="uid://cpatfwaguns1k" path="res://Scenes/Components/health_component.tscn" id="2_40svl"]
 [ext_resource type="PackedScene" uid="uid://d1vgehjd4i5m0" path="res://Scenes/Components/movement_component.tscn" id="3_gy20a"]
 [ext_resource type="PackedScene" uid="uid://cercmh2airn6b" path="res://Scenes/Characters/Player/player_movement_behavior.tscn" id="4_cqrjx"]
+[ext_resource type="Script" path="res://Scripts/Components/weapon_component.gd" id="5_weapon_component"]
+[ext_resource type="Resource" path="res://Resources/Weapons/pistol.tres" id="6_pistol"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
 radius = 62.169125
 
-[node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component") groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component", "weapon_component") groups=["player"]]
+collision_layer = 2
+collision_mask = 9
 script = ExtResource("1_cqrjx")
 movement_component = NodePath("MovementComponent")
 health_component = NodePath("HealthComponent")
+weapon_component = NodePath("WeaponComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1899952837]
 sprite_frames = ExtResource("1_v0iea")
@@ -24,6 +29,14 @@ speed = 300.0
 behavior = NodePath("../PlayerMovementBehavior")
 
 [node name="PlayerMovementBehavior" parent="." unique_id=1758293071 instance=ExtResource("4_cqrjx")]
+
+[node name="AttackOrigin" type="Marker2D" parent="."]
+position = Vector2(70, 0)
+
+[node name="WeaponComponent" type="Node" parent="." node_paths=PackedStringArray("muzzle")]
+script = ExtResource("5_weapon_component")
+weapon = ExtResource("6_pistol")
+muzzle = NodePath("../AttackOrigin")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1155133397]
 shape = SubResource("CircleShape2D_cqrjx")

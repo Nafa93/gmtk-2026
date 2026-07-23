@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Weapons/weapon_data.gd" id="1_weapon_data"]
+[ext_resource type="Resource" path="res://Resources/Weapons/projectile_attack.tres" id="2_attack_behavior"]
+[ext_resource type="PackedScene" path="res://Scenes/Weapons/projectile.tscn" id="3_projectile_scene"]
+
+[resource]
+script = ExtResource("1_weapon_data")
+weapon_name = "Escopeta"
+attack_behavior = ExtResource("2_attack_behavior")
+damage = 1
+attacks_per_second = 1.2
+automatic = false
+projectile_scene = ExtResource("3_projectile_scene")
+projectile_speed = 650.0
+projectile_count = 8
+spread_degrees = 25.0

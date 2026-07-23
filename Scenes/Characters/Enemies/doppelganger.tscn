@@ -10,6 +10,8 @@
 radius = 63.1981
 
 [node name="Doppelganger" type="CharacterBody2D" unique_id=131484088 node_paths=PackedStringArray("health_component", "movement_component") groups=["enemy"]]
+collision_layer = 8
+collision_mask = 3
 script = ExtResource("1_m75j8")
 health_component = NodePath("HealthComponent")
 movement_component = NodePath("MovementComponent")
