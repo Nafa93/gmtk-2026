@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="LootPool" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Loot/LootPool.gd" id="1_pool"]
+[ext_resource type="PackedScene" path="res://Scenes/Weapons/Pistol.tscn" id="2_pistol"]
+[ext_resource type="PackedScene" path="res://Scenes/Weapons/Rifle.tscn" id="3_rifle"]
+[ext_resource type="PackedScene" path="res://Scenes/Weapons/Shotgun.tscn" id="4_shotgun"]
+
+[resource]
+script = ExtResource("1_pool")
+weapon_scenes = Array[PackedScene]([ExtResource("2_pistol"), ExtResource("3_rifle"), ExtResource("4_shotgun")])
