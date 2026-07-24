@@ -3,16 +3,19 @@ extends Node
 
 signal weapon_equipped(slot: int, weapon: Weapon)
 signal weapon_switched(active_weapon: Weapon, secondary_weapon: Weapon)
+signal loadout_changed(active_weapon: Weapon, secondary_weapon: Weapon)
 
 const SLOT_COUNT: int = 2
 
 @export var weapon_holder: Node2D
 @export_range(0, 1, 1) var active_slot_index: int = 0
+@export var starting_weapon_scenes: Array[PackedScene] = []
 
 var current_weapon: Weapon
 var secondary_weapon: Weapon
 
 var _weapons: Array[Weapon] = [null, null]
+var _weapon_scenes: Array[PackedScene] = [null, null]
 var _cooldowns: Array[float] = [0.0, 0.0]
 var _attack_was_pressed: bool = false
 
@@ -36,9 +39,14 @@ func _ready() -> void:
 			continue
 
 		_weapons[discovered_slot] = child as Weapon
+		if discovered_slot < starting_weapon_scenes.size():
+			_weapon_scenes[discovered_slot] = starting_weapon_scenes[
+				discovered_slot
+			]
 		discovered_slot += 1
 
 	_refresh_weapon_states()
+	loadout_changed.emit(current_weapon, secondary_weapon)
 
 
 func _physics_process(delta: float) -> void:
@@ -73,9 +81,11 @@ func equip_weapon(weapon_scene: PackedScene, slot: int = 0) -> bool:
 
 	weapon_holder.add_child(new_weapon)
 	_weapons[slot] = new_weapon
+	_weapon_scenes[slot] = weapon_scene
 	_cooldowns[slot] = 0.0
 	_refresh_weapon_states()
 	weapon_equipped.emit(slot, new_weapon)
+	loadout_changed.emit(current_weapon, secondary_weapon)
 	return true
 
 
@@ -109,6 +119,59 @@ func get_weapon_in_slot(slot: int) -> Weapon:
 		return null
 
 	return _weapons[slot]
+
+
+func get_weapon_scene_in_slot(slot: int) -> PackedScene:
+	if not _is_valid_slot(slot):
+		push_error("WeaponComponent slot must be 0 or 1; received %d." % slot)
+		return null
+	return _weapon_scenes[slot]
+
+
+func get_first_empty_slot() -> int:
+	for slot: int in range(SLOT_COUNT):
+		var weapon: Weapon = _weapons[slot]
+		if weapon == null or not is_instance_valid(weapon):
+			return slot
+	return -1
+
+
+func get_equipped_weapon_count() -> int:
+	var count: int = 0
+	for weapon: Weapon in _weapons:
+		if weapon != null and is_instance_valid(weapon):
+			count += 1
+	return count
+
+
+func clear_all_weapons() -> void:
+	for slot: int in range(SLOT_COUNT):
+		var weapon: Weapon = _weapons[slot]
+		if weapon != null and is_instance_valid(weapon):
+			weapon.deactivate()
+			weapon.free()
+		_weapons[slot] = null
+		_weapon_scenes[slot] = null
+		_cooldowns[slot] = 0.0
+
+	active_slot_index = 0
+	_attack_was_pressed = false
+	_refresh_weapon_states()
+	loadout_changed.emit(current_weapon, secondary_weapon)
+
+
+func set_active_slot(slot: int) -> bool:
+	if not _is_valid_slot(slot):
+		push_error("WeaponComponent slot must be 0 or 1; received %d." % slot)
+		return false
+	if _weapons[slot] == null or not is_instance_valid(_weapons[slot]):
+		push_warning("WeaponComponent cannot activate empty slot %d." % slot)
+		return false
+
+	active_slot_index = slot
+	_refresh_weapon_states()
+	weapon_switched.emit(current_weapon, secondary_weapon)
+	return true
 
 
 func handle_attack_input(

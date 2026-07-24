@@ -5,8 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bk3rtxa1ypj1p" path="res://Scenes/Characters/Player/player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/PreparationHUD.tscn" id="4_hud"]
 [ext_resource type="PackedScene" uid="uid://da8sgbng7wcgu" path="res://Scenes/main.tscn" id="5_boss_scene"]
-[ext_resource type="Script" path="res://Scripts/Loot/LootSpawnPoint.gd" id="6_spawn_point"]
-[ext_resource type="Script" path="res://Scripts/Loot/LootDistributor.gd" id="7_distributor"]
+[ext_resource type="Script" uid="uid://brqlrvwqv5xtp" path="res://Scripts/Loot/LootSpawnPoint.gd" id="6_spawn_point"]
+[ext_resource type="Script" uid="uid://8054gsdvua51" path="res://Scripts/Loot/LootDistributor.gd" id="7_distributor"]
 [ext_resource type="Resource" path="res://Resources/Loot/basic_weapon_pool.tres" id="8_pool"]
 [ext_resource type="PackedScene" path="res://Scenes/Loot/WeaponPickup.tscn" id="9_pickup"]
 
@@ -42,50 +42,44 @@ one_shot = true
 
 [node name="LootSpawnPoints" type="Node2D" parent="." unique_id=1322511322]
 
-[node name="Spawn01" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn01" type="Marker2D" parent="LootSpawnPoints" unique_id=1651726743]
 position = Vector2(140, 240)
 script = ExtResource("6_spawn_point")
 
-[node name="Spawn02" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn02" type="Marker2D" parent="LootSpawnPoints" unique_id=238129482]
 position = Vector2(360, 190)
 script = ExtResource("6_spawn_point")
 
-[node name="Spawn03" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn03" type="Marker2D" parent="LootSpawnPoints" unique_id=475196075]
 position = Vector2(620, 220)
 script = ExtResource("6_spawn_point")
 
-[node name="Spawn04" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn04" type="Marker2D" parent="LootSpawnPoints" unique_id=2114773989]
 position = Vector2(850, 310)
 script = ExtResource("6_spawn_point")
 
-[node name="Spawn05" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn05" type="Marker2D" parent="LootSpawnPoints" unique_id=1884231930]
 position = Vector2(180, 520)
 script = ExtResource("6_spawn_point")
 
-[node name="Spawn06" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn06" type="Marker2D" parent="LootSpawnPoints" unique_id=2008392417]
 position = Vector2(650, 520)
 script = ExtResource("6_spawn_point")
 
-[node name="Spawn07" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn07" type="Marker2D" parent="LootSpawnPoints" unique_id=679457123]
 position = Vector2(930, 570)
 script = ExtResource("6_spawn_point")
 
-[node name="Spawn08" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn08" type="Marker2D" parent="LootSpawnPoints" unique_id=1029285739]
 position = Vector2(300, 760)
 script = ExtResource("6_spawn_point")
 
-[node name="Spawn09" type="Marker2D" parent="LootSpawnPoints"]
+[node name="Spawn09" type="Marker2D" parent="LootSpawnPoints" unique_id=237104901]
 position = Vector2(590, 760)
 script = ExtResource("6_spawn_point")
 
-[node name="SpawnDisabledExample" type="Marker2D" parent="LootSpawnPoints"]
-position = Vector2(850, 760)
-script = ExtResource("6_spawn_point")
-excluded = true
-
-[node name="LootDistributor" type="Node" parent="." node_paths=PackedStringArray("spawn_points_root", "output_container")]
+[node name="LootDistributor" type="Node" parent="." unique_id=50880144 node_paths=PackedStringArray("spawn_points_root", "output_container")]
 script = ExtResource("7_distributor")
-total_weapon_count = 6
 spawn_points_root = NodePath("../LootSpawnPoints")
 loot_pool = ExtResource("8_pool")
 pickup_scene = ExtResource("9_pickup")

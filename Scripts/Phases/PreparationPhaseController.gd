@@ -27,6 +27,8 @@ enum PhaseState {
 @export_range(0.0, 30.0, 0.1, "or_greater") var transition_delay: float = 1.5
 ## Escena que se cargará cuando termine la fase de preparación.
 @export var next_boss_scene: PackedScene
+## Si está activo, el jugador comienza esta fase sin armas.
+@export var start_with_empty_loadout: bool = true
 
 @export_group("References")
 ## Referencia opcional al jugador. Si está vacía, se busca el primer nodo del grupo "player".
@@ -43,6 +45,7 @@ var _finish_requested: bool = false
 
 
 func _ready() -> void:
+	add_to_group(&"preparation_phase_controller")
 	if not _validate_references():
 		return
 
@@ -92,6 +95,14 @@ func _initialize_phase() -> void:
 			+ "Assign player or add it to the 'player' group."
 		)
 		return
+
+	if start_with_empty_loadout and player.weapon_component != null:
+		player.weapon_component.clear_all_weapons()
+		var run_loadout := get_node_or_null(
+			"/root/RunLoadout"
+		) as RunLoadoutState
+		if run_loadout != null:
+			run_loadout.clear_loadout()
 
 	player_resolved.emit(player)
 	_warning_emitted = false
@@ -162,9 +173,15 @@ func _complete_without_scene_change() -> void:
 
 
 func _capture_phase_result() -> void:
-	# Intentionally empty until run persistence is implemented.
-	# Future code can read player.weapon_component here or through phase_finishing.
-	pass
+	if player == null or player.weapon_component == null:
+		push_warning("Preparation phase finished without a player loadout to capture.")
+		return
+
+	var run_loadout := get_node_or_null("/root/RunLoadout") as RunLoadoutState
+	if run_loadout == null:
+		push_warning("RunLoadout autoload is unavailable; weapons cannot persist.")
+		return
+	run_loadout.capture_from(player.weapon_component)
 
 
 func _emit_time_remaining(seconds_remaining: float) -> void:

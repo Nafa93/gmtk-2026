@@ -41,6 +41,7 @@ position = Vector2(63, -1)
 [node name="WeaponComponent" type="Node" parent="." unique_id=1996894831 node_paths=PackedStringArray("weapon_holder")]
 script = ExtResource("5_weapon_component")
 weapon_holder = NodePath("../WeaponHolder")
+starting_weapon_scenes = Array[PackedScene]([ExtResource("6_pistol"), ExtResource("7_shotgun")])
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1272165030]
 zoom = Vector2(0.5, 0.5)
