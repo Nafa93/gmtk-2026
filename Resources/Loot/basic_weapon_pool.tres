@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="LootPool" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="LootPool" format=3 uid="uid://b5ru8u1bu8i27"]
 
-[ext_resource type="Script" path="res://Scripts/Loot/LootPool.gd" id="1_pool"]
-[ext_resource type="PackedScene" path="res://Scenes/Weapons/Pistol.tscn" id="2_pistol"]
+[ext_resource type="Script" uid="uid://dkp732ehwwsv1" path="res://Scripts/Loot/LootPool.gd" id="1_pool"]
+[ext_resource type="PackedScene" uid="uid://cs2x82cf7p53p" path="res://Scenes/Weapons/Pistol.tscn" id="2_pistol"]
 [ext_resource type="PackedScene" path="res://Scenes/Weapons/Rifle.tscn" id="3_rifle"]
-[ext_resource type="PackedScene" path="res://Scenes/Weapons/Shotgun.tscn" id="4_shotgun"]
+[ext_resource type="PackedScene" uid="uid://d0fmnxqctl5qd" path="res://Scenes/Weapons/Shotgun.tscn" id="4_shotgun"]
 
 [resource]
 script = ExtResource("1_pool")

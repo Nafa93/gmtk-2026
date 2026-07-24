@@ -28,6 +28,14 @@ signal distribution_finished(spawned_count: int, used_seed: int)
 ## Contenedor opcional para los pickups generados. Por defecto se usa el padre.
 @export var output_container: Node
 
+@export_group("Distance Rating")
+## When enabled, distant spawn points receive weapons with higher ratings.
+@export var use_distance_rating: bool = true
+## Position from which room distance is measured, normally the player spawn.
+@export var distance_origin: Node2D
+@export_range(1, 5, 1) var minimum_target_rating: int = 1
+@export_range(1, 5, 1) var maximum_target_rating: int = 5
+
 var used_seed: int = 0
 var spawned_pickups: Array[WeaponPickup] = []
 
@@ -60,7 +68,10 @@ func distribute() -> int:
 		distribution_finished.emit(0, used_seed)
 		return 0
 
-	_shuffle_points(available_points)
+	if use_distance_rating:
+		_sort_points_by_distance(available_points)
+	else:
+		_shuffle_points(available_points)
 	var requested_count: int = maxi(total_weapon_count, 0)
 	var spawn_count: int = mini(requested_count, available_points.size())
 
@@ -75,9 +86,17 @@ func distribute() -> int:
 
 	for index: int in range(spawn_count):
 		var point: LootSpawnPoint = available_points[index]
-		var weapon_scene: PackedScene = available_weapons[
-			_rng.randi_range(0, available_weapons.size() - 1)
-		]
+		var weapon_scene: PackedScene
+		if use_distance_rating:
+			weapon_scene = _select_weapon_for_point(
+				point,
+				available_points,
+				available_weapons
+			)
+		else:
+			weapon_scene = available_weapons[
+				_rng.randi_range(0, available_weapons.size() - 1)
+			]
 		_spawn_weapon(point, weapon_scene)
 
 	distribution_finished.emit(spawned_pickups.size(), used_seed)
@@ -152,6 +171,75 @@ func _shuffle_points(points: Array[LootSpawnPoint]) -> void:
 		var temporary: LootSpawnPoint = points[index]
 		points[index] = points[swap_index]
 		points[swap_index] = temporary
+
+
+func _sort_points_by_distance(points: Array[LootSpawnPoint]) -> void:
+	var origin_position: Vector2 = _get_distance_origin()
+	points.sort_custom(
+		func(first: LootSpawnPoint, second: LootSpawnPoint) -> bool:
+			return first.global_position.distance_squared_to(origin_position) < (
+				second.global_position.distance_squared_to(origin_position)
+			)
+	)
+
+
+func _select_weapon_for_point(
+	point: LootSpawnPoint,
+	all_points: Array[LootSpawnPoint],
+	weapons: Array[PackedScene]
+) -> PackedScene:
+	var origin_position: Vector2 = _get_distance_origin()
+	var maximum_distance: float = 0.0
+	for spawn_point: LootSpawnPoint in all_points:
+		maximum_distance = maxf(
+			maximum_distance,
+			spawn_point.global_position.distance_to(origin_position)
+		)
+
+	var distance_ratio: float = 0.0
+	if maximum_distance > 0.0:
+		distance_ratio = point.global_position.distance_to(
+			origin_position
+		) / maximum_distance
+
+	var low_rating: int = mini(minimum_target_rating, maximum_target_rating)
+	var high_rating: int = maxi(minimum_target_rating, maximum_target_rating)
+	var target_rating: int = roundi(lerpf(
+		float(low_rating),
+		float(high_rating),
+		clampf(distance_ratio, 0.0, 1.0)
+	))
+
+	var closest_scenes: Array[PackedScene] = []
+	var closest_difference: int = 1000000
+	for weapon_scene: PackedScene in weapons:
+		var rating: int = _get_weapon_rating(weapon_scene)
+		var difference: int = absi(rating - target_rating)
+		if difference < closest_difference:
+			closest_difference = difference
+			closest_scenes.clear()
+			closest_scenes.append(weapon_scene)
+		elif difference == closest_difference:
+			closest_scenes.append(weapon_scene)
+
+	return closest_scenes[_rng.randi_range(0, closest_scenes.size() - 1)]
+
+
+func _get_weapon_rating(weapon_scene: PackedScene) -> int:
+	var weapon_node: Node = weapon_scene.instantiate()
+	var weapon := weapon_node as Weapon
+	if weapon == null:
+		weapon_node.free()
+		return minimum_target_rating
+	var rating: int = weapon.data.rating if weapon.data != null else minimum_target_rating
+	weapon.free()
+	return rating
+
+
+func _get_distance_origin() -> Vector2:
+	if distance_origin != null:
+		return distance_origin.global_position
+	return Vector2.ZERO
 
 
 func _spawn_weapon(

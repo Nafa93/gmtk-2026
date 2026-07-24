@@ -2,6 +2,9 @@ class_name WeaponData
 extends Resource
 
 @export var weapon_name: String
+## Relative power used by distance-aware loot generation.
+## A higher value means the weapon should appear farther from the starting room.
+@export_range(1, 5, 1) var rating: int = 1
 
 @export var attack_behavior: AttackBehavior
 

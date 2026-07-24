@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://8054gsdvua51" path="res://Scripts/Loot/LootDistributor.gd" id="7_distributor"]
 [ext_resource type="Resource" path="res://Resources/Loot/basic_weapon_pool.tres" id="8_pool"]
 [ext_resource type="PackedScene" path="res://Scenes/Loot/WeaponPickup.tscn" id="9_pickup"]
+[ext_resource type="Script" path="res://Scripts/Rooms/ProceduralRoomGenerator.gd" id="10_room_generator"]
+[ext_resource type="Script" path="res://Scripts/Rooms/PreparationFogOfWar.gd" id="11_fog"]
 
 [node name="PreparationPhase" type="Node2D" unique_id=2091941431 node_paths=PackedStringArray("phase_controller", "hud")]
 script = ExtResource("1_phase")
@@ -33,56 +35,34 @@ transition_timer = NodePath("TransitionTimer")
 one_shot = true
 
 [node name="DisplayTickTimer" type="Timer" parent="PreparationPhaseController" unique_id=1779683649]
-wait_time = 0.1
+wait_time = 1.0499999999999998
 
 [node name="TransitionTimer" type="Timer" parent="PreparationPhaseController" unique_id=1980115806]
 one_shot = true
 
 [node name="InteractionContainer" type="Node2D" parent="." unique_id=1540823158]
 
+[node name="GeneratedRooms" type="Node2D" parent="."]
+
 [node name="LootSpawnPoints" type="Node2D" parent="." unique_id=1322511322]
-
-[node name="Spawn01" type="Marker2D" parent="LootSpawnPoints" unique_id=1651726743]
-position = Vector2(140, 240)
-script = ExtResource("6_spawn_point")
-
-[node name="Spawn02" type="Marker2D" parent="LootSpawnPoints" unique_id=238129482]
-position = Vector2(360, 190)
-script = ExtResource("6_spawn_point")
-
-[node name="Spawn03" type="Marker2D" parent="LootSpawnPoints" unique_id=475196075]
-position = Vector2(620, 220)
-script = ExtResource("6_spawn_point")
-
-[node name="Spawn04" type="Marker2D" parent="LootSpawnPoints" unique_id=2114773989]
-position = Vector2(850, 310)
-script = ExtResource("6_spawn_point")
-
-[node name="Spawn05" type="Marker2D" parent="LootSpawnPoints" unique_id=1884231930]
-position = Vector2(180, 520)
-script = ExtResource("6_spawn_point")
-
-[node name="Spawn06" type="Marker2D" parent="LootSpawnPoints" unique_id=2008392417]
-position = Vector2(650, 520)
-script = ExtResource("6_spawn_point")
-
-[node name="Spawn07" type="Marker2D" parent="LootSpawnPoints" unique_id=679457123]
-position = Vector2(930, 570)
-script = ExtResource("6_spawn_point")
-
-[node name="Spawn08" type="Marker2D" parent="LootSpawnPoints" unique_id=1029285739]
-position = Vector2(300, 760)
-script = ExtResource("6_spawn_point")
-
-[node name="Spawn09" type="Marker2D" parent="LootSpawnPoints" unique_id=237104901]
-position = Vector2(590, 760)
-script = ExtResource("6_spawn_point")
 
 [node name="LootDistributor" type="Node" parent="." unique_id=50880144 node_paths=PackedStringArray("spawn_points_root", "output_container")]
 script = ExtResource("7_distributor")
+distribute_on_ready = false
 spawn_points_root = NodePath("../LootSpawnPoints")
 loot_pool = ExtResource("8_pool")
 pickup_scene = ExtResource("9_pickup")
 output_container = NodePath("../InteractionContainer")
+
+[node name="ProceduralRoomGenerator" type="Node2D" parent="." node_paths=PackedStringArray("generation_origin", "rooms_container", "spawn_points_container", "loot_distributor")]
+script = ExtResource("10_room_generator")
+generation_origin = NodePath("../PlayerSpawn")
+rooms_container = NodePath("../GeneratedRooms")
+spawn_points_container = NodePath("../LootSpawnPoints")
+loot_distributor = NodePath("../LootDistributor")
+
+[node name="PreparationFogOfWar" type="Node" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("11_fog")
+player = NodePath("../Player")
 
 [node name="PreparationHUD" parent="." unique_id=593819669 instance=ExtResource("4_hud")]

@@ -7,6 +7,7 @@
 [resource]
 script = ExtResource("1_weapon_data")
 weapon_name = "Pistola"
+rating = 1
 attack_behavior = ExtResource("2_attack_behavior")
 damage = 2
 attacks_per_second = 3.0
