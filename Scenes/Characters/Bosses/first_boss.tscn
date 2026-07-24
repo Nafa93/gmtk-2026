@@ -1,29 +1,30 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene format=3 uid="uid://8yffhma1jyx8"]
 
-[ext_resource type="Script" path="res://Scripts/Bosses/BossController.gd" id="1_controller"]
-[ext_resource type="SpriteFrames" path="res://Assets/doppelganger.tres" id="2_frames"]
-[ext_resource type="PackedScene" path="res://Scenes/Components/health_component.tscn" id="3_health"]
+[ext_resource type="Script" uid="uid://ch5ssyqi7u4xp" path="res://Scripts/Bosses/BossController.gd" id="1_controller"]
+[ext_resource type="SpriteFrames" uid="uid://v1d01hhike0o" path="res://Assets/doppelganger.tres" id="2_frames"]
+[ext_resource type="PackedScene" uid="uid://cpatfwaguns1k" path="res://Scenes/Components/health_component.tscn" id="3_health"]
 [ext_resource type="PackedScene" path="res://Scenes/Weapons/projectile.tscn" id="4_projectile"]
-[ext_resource type="Resource" path="res://Resources/Bosses/FirstBoss/aimed_burst.tres" id="5_aimed"]
-[ext_resource type="Resource" path="res://Resources/Bosses/FirstBoss/radial.tres" id="6_radial"]
-[ext_resource type="Resource" path="res://Resources/Bosses/FirstBoss/charge.tres" id="7_charge"]
-[ext_resource type="Script" path="res://Scripts/Bosses/Attacks/BossAttack.gd" id="8_base_attack"]
-[ext_resource type="Script" path="res://Scripts/Bosses/Components/BossTargeting.gd" id="9_targeting"]
-[ext_resource type="Script" path="res://Scripts/Bosses/Components/BossAttackScheduler.gd" id="10_scheduler"]
-[ext_resource type="Script" path="res://Scripts/Bosses/Components/BossProjectileEmitter.gd" id="11_emitter"]
-[ext_resource type="Script" path="res://Scripts/Bosses/Components/BossTelegraphPresenter.gd" id="12_presenter"]
-[ext_resource type="Script" path="res://Scripts/Bosses/Components/BossPhaseController.gd" id="13_phase"]
-[ext_resource type="Script" path="res://Scripts/Bosses/States/BossStateMachine.gd" id="14_machine"]
-[ext_resource type="Script" path="res://Scripts/Bosses/States/BossMoveState.gd" id="16_move"]
-[ext_resource type="Script" path="res://Scripts/Bosses/States/BossTelegraphState.gd" id="17_telegraph"]
-[ext_resource type="Script" path="res://Scripts/Bosses/States/BossAttackState.gd" id="18_attack"]
-[ext_resource type="Script" path="res://Scripts/Bosses/States/BossRecoveryState.gd" id="19_recovery"]
-[ext_resource type="Script" path="res://Scripts/Bosses/States/BossDeadState.gd" id="20_dead"]
+[ext_resource type="Resource" uid="uid://21sigo3s461y" path="res://Resources/Bosses/FirstBoss/aimed_burst.tres" id="5_aimed"]
+[ext_resource type="Resource" uid="uid://bec8etdaf64od" path="res://Resources/Bosses/FirstBoss/radial.tres" id="6_radial"]
+[ext_resource type="Resource" uid="uid://decun1u5n2npu" path="res://Resources/Bosses/FirstBoss/charge.tres" id="7_charge"]
+[ext_resource type="Script" uid="uid://cwe06snj6ymwh" path="res://Scripts/Bosses/Attacks/BossAttack.gd" id="8_base_attack"]
+[ext_resource type="Script" uid="uid://cgv3wg3vyu7up" path="res://Scripts/Bosses/Components/BossTargeting.gd" id="9_targeting"]
+[ext_resource type="Script" uid="uid://c8wdj0da63ch8" path="res://Scripts/Bosses/Components/BossAttackScheduler.gd" id="10_scheduler"]
+[ext_resource type="Script" uid="uid://0rb0wic0krlg" path="res://Scripts/Bosses/Components/BossProjectileEmitter.gd" id="11_emitter"]
+[ext_resource type="Script" uid="uid://pvsjebgsrr6t" path="res://Scripts/Bosses/Components/BossTelegraphPresenter.gd" id="12_presenter"]
+[ext_resource type="Script" uid="uid://bp7app2005f0l" path="res://Scripts/Bosses/Components/BossPhaseController.gd" id="13_phase"]
+[ext_resource type="Script" uid="uid://skgtdfq8mif4" path="res://Scripts/Bosses/States/BossStateMachine.gd" id="14_machine"]
+[ext_resource type="Script" uid="uid://strxl3xdhufh" path="res://Scripts/Bosses/States/BossMoveState.gd" id="16_move"]
+[ext_resource type="Script" uid="uid://df58cri067yf7" path="res://Scripts/Bosses/States/BossTelegraphState.gd" id="17_telegraph"]
+[ext_resource type="Script" uid="uid://bf3fyqwp65wla" path="res://Scripts/Bosses/States/BossAttackState.gd" id="18_attack"]
+[ext_resource type="Script" uid="uid://njngqhbj7tk" path="res://Scripts/Bosses/States/BossRecoveryState.gd" id="19_recovery"]
+[ext_resource type="Script" uid="uid://dv7tayn2shk5o" path="res://Scripts/Bosses/States/BossDeadState.gd" id="20_dead"]
+[ext_resource type="Resource" uid="uid://cg8kbbc04ly24" path="res://Resources/Bosses/FirstBoss/tracking_burst.tres" id="21_tracking"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_boss"]
 radius = 54.0
 
-[node name="FirstBoss" type="CharacterBody2D" node_paths=PackedStringArray("health_component", "boss_sprite", "collision_shape", "state_machine", "dead_state", "targeting", "attack_scheduler", "projectile_emitter", "telegraph_presenter", "phase_controller") groups=["enemy", "boss"]]
+[node name="FirstBoss" type="CharacterBody2D" unique_id=899738219 node_paths=PackedStringArray("health_component", "boss_sprite", "collision_shape", "state_machine", "dead_state", "targeting", "attack_scheduler", "projectile_emitter", "telegraph_presenter", "phase_controller") groups=["boss", "enemy"]]
 collision_layer = 8
 collision_mask = 3
 script = ExtResource("1_controller")
@@ -37,57 +38,52 @@ attack_scheduler = NodePath("BossComponents/AttackScheduler")
 projectile_emitter = NodePath("BossComponents/ProjectileEmitter")
 telegraph_presenter = NodePath("BossComponents/TelegraphPresenter")
 phase_controller = NodePath("BossComponents/PhaseController")
-movement_speed = 115.0
-preferred_minimum_distance = 260.0
-preferred_maximum_distance = 430.0
-reposition_duration = 1.25
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=979432517]
+modulate = Color(0.7, 0.25, 1, 1)
 scale = Vector2(1.35, 1.35)
 sprite_frames = ExtResource("2_frames")
-modulate = Color(0.7, 0.25, 1, 1)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1348610606]
 shape = SubResource("CircleShape2D_boss")
 
-[node name="HealthComponent" parent="." instance=ExtResource("3_health")]
+[node name="HealthComponent" parent="." unique_id=423046376 instance=ExtResource("3_health")]
 max_health = 40
 
-[node name="ProjectileOrigin" type="Marker2D" parent="."]
+[node name="ProjectileOrigin" type="Marker2D" parent="." unique_id=1841616965]
 position = Vector2(0, -62)
 
-[node name="DirectionTelegraph" type="Polygon2D" parent="."]
+[node name="DirectionTelegraph" type="Polygon2D" parent="." unique_id=1335022116]
 visible = false
 z_index = -1
 
-[node name="RadialTelegraph" type="Line2D" parent="."]
+[node name="RadialTelegraph" type="Line2D" parent="." unique_id=905092021]
 visible = false
 z_index = -1
-width = 6.0
 closed = true
+width = 6.0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1140074556]
 
-[node name="TelegraphAudio" type="AudioStreamPlayer2D" parent="."]
+[node name="TelegraphAudio" type="AudioStreamPlayer2D" parent="." unique_id=521673423]
 
-[node name="AttackAudio" type="AudioStreamPlayer2D" parent="."]
+[node name="AttackAudio" type="AudioStreamPlayer2D" parent="." unique_id=713079879]
 
-[node name="BossComponents" type="Node" parent="."]
+[node name="BossComponents" type="Node" parent="." unique_id=684783887]
 
-[node name="Targeting" type="Node" parent="BossComponents"]
+[node name="Targeting" type="Node" parent="BossComponents" unique_id=1901123237]
 script = ExtResource("9_targeting")
-target_group = &"player"
 
-[node name="AttackScheduler" type="Node" parent="BossComponents"]
+[node name="AttackScheduler" type="Node" parent="BossComponents" unique_id=1030044547]
 script = ExtResource("10_scheduler")
-attacks = Array[ExtResource("8_base_attack")]([ExtResource("5_aimed"), ExtResource("6_radial"), ExtResource("7_charge")])
+attacks = Array[ExtResource("8_base_attack")]([ExtResource("5_aimed"), ExtResource("21_tracking"), ExtResource("6_radial"), ExtResource("7_charge")])
 
-[node name="ProjectileEmitter" type="Node" parent="BossComponents" node_paths=PackedStringArray("projectile_origin")]
+[node name="ProjectileEmitter" type="Node" parent="BossComponents" unique_id=1368048033 node_paths=PackedStringArray("projectile_origin")]
 script = ExtResource("11_emitter")
 projectile_origin = NodePath("../../ProjectileOrigin")
 projectile_scene = ExtResource("4_projectile")
 
-[node name="TelegraphPresenter" type="Node" parent="BossComponents" node_paths=PackedStringArray("direction_telegraph", "radial_telegraph", "animation_player", "telegraph_audio", "attack_audio")]
+[node name="TelegraphPresenter" type="Node" parent="BossComponents" unique_id=533494861 node_paths=PackedStringArray("direction_telegraph", "radial_telegraph", "animation_player", "telegraph_audio", "attack_audio")]
 script = ExtResource("12_presenter")
 direction_telegraph = NodePath("../../DirectionTelegraph")
 radial_telegraph = NodePath("../../RadialTelegraph")
@@ -95,39 +91,33 @@ animation_player = NodePath("../../AnimationPlayer")
 telegraph_audio = NodePath("../../TelegraphAudio")
 attack_audio = NodePath("../../AttackAudio")
 
-[node name="PhaseController" type="Node" parent="BossComponents"]
+[node name="PhaseController" type="Node" parent="BossComponents" unique_id=1056274232]
 script = ExtResource("13_phase")
-phase_two_health_ratio = 0.5
-phase_two_movement_speed_multiplier = 1.2
-phase_two_projectile_speed_multiplier = 1.2
-phase_two_telegraph_multiplier = 0.85
-phase_two_recovery_multiplier = 0.7
-phase_two_cooldown_multiplier = 0.8
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine" type="Node" parent="." unique_id=533892552 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("14_machine")
 initial_state = NodePath("Move")
 
-[node name="Move" type="Node" parent="StateMachine" node_paths=PackedStringArray("telegraph_state")]
+[node name="Move" type="Node" parent="StateMachine" unique_id=2108520280 node_paths=PackedStringArray("telegraph_state")]
 script = ExtResource("16_move")
-state_name = &"MOVE"
 telegraph_state = NodePath("../Telegraph")
+state_name = &"MOVE"
 
-[node name="Telegraph" type="Node" parent="StateMachine" node_paths=PackedStringArray("attack_state")]
+[node name="Telegraph" type="Node" parent="StateMachine" unique_id=67391501 node_paths=PackedStringArray("attack_state")]
 script = ExtResource("17_telegraph")
-state_name = &"TELEGRAPH"
 attack_state = NodePath("../Attack")
+state_name = &"TELEGRAPH"
 
-[node name="Attack" type="Node" parent="StateMachine" node_paths=PackedStringArray("recovery_state")]
+[node name="Attack" type="Node" parent="StateMachine" unique_id=683879664 node_paths=PackedStringArray("recovery_state")]
 script = ExtResource("18_attack")
-state_name = &"ATTACK"
 recovery_state = NodePath("../Recovery")
+state_name = &"ATTACK"
 
-[node name="Recovery" type="Node" parent="StateMachine" node_paths=PackedStringArray("move_state")]
+[node name="Recovery" type="Node" parent="StateMachine" unique_id=1668790586 node_paths=PackedStringArray("move_state")]
 script = ExtResource("19_recovery")
-state_name = &"RECOVERY"
 move_state = NodePath("../Move")
+state_name = &"RECOVERY"
 
-[node name="Dead" type="Node" parent="StateMachine"]
+[node name="Dead" type="Node" parent="StateMachine" unique_id=1966161571]
 script = ExtResource("20_dead")
 state_name = &"DEAD"

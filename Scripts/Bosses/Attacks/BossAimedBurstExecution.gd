@@ -7,6 +7,7 @@ var _shots_remaining: int
 var _shot_interval: float
 var _projectile_speed: float
 var _damage: int
+var _retarget_each_shot: bool
 var _time_until_shot: float = 0.0
 
 
@@ -21,6 +22,7 @@ func _init(
 	_shot_interval = attack.shot_interval
 	_projectile_speed = attack.projectile_speed
 	_damage = attack.damage
+	_retarget_each_shot = attack.retarget_each_shot
 
 	if phase >= 2:
 		_shots_remaining += attack.phase_two_burst_bonus
@@ -40,7 +42,17 @@ func physics_update(delta: float) -> void:
 	_time_until_shot -= delta
 
 	while _shots_remaining > 0 and _time_until_shot <= 0.0:
-		_boss.spawn_boss_projectile(_direction, _projectile_speed, _damage)
+		var shot_direction: Vector2 = _direction
+		if _retarget_each_shot:
+			var current_direction: Vector2 = _boss.get_direction_to_target()
+			if not current_direction.is_zero_approx():
+				shot_direction = current_direction
+
+		_boss.spawn_boss_projectile(
+			shot_direction,
+			_projectile_speed,
+			_damage
+		)
 		_shots_remaining -= 1
 		_time_until_shot += _shot_interval
 

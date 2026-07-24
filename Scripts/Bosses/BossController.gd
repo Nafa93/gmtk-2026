@@ -100,6 +100,11 @@ func get_locked_attack_direction() -> Vector2:
 	return targeting.locked_direction
 
 
+func get_direction_to_target() -> Vector2:
+	targeting.refresh_target()
+	return targeting.get_direction_from(global_position)
+
+
 func show_direction_telegraph(
 	direction: Vector2,
 	length: float,

@@ -1,24 +1,16 @@
-[gd_resource type="Resource" script_class="BossRadialAttack" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BossRadialAttack" format=3 uid="uid://bec8etdaf64od"]
 
-[ext_resource type="Script" path="res://Scripts/Bosses/Attacks/BossRadialAttack.gd" id="1_attack"]
+[ext_resource type="Script" uid="uid://d1incxs3af3vy" path="res://Scripts/Bosses/Attacks/BossRadialAttack.gd" id="1_attack"]
 
 [resource]
 script = ExtResource("1_attack")
+projectile_count = 10
+projectile_speed = 400.0
+wave_count = 7
+rotation_per_wave_degrees = 18.0
 attack_name = "Radial Pattern"
-selection_weight = 1.0
 cooldown = 3.0
-minimum_distance = 0.0
 maximum_distance = 650.0
 telegraph_duration = 1.0
 recovery_duration = 0.9
 telegraph_color = Color(0.9, 0.15, 1, 0.75)
-projectile_count = 10
-projectile_speed = 400.0
-damage = 1
-angular_offset_degrees = 0.0
-wave_count = 2
-time_between_waves = 0.45
-rotation_per_wave_degrees = 18.0
-phase_two_projectile_bonus = 4
-phase_two_wave_bonus = 1
-phase_two_wave_interval_multiplier = 0.8
