@@ -34,14 +34,18 @@ behavior = NodePath("../PlayerMovementBehavior")
 [node name="WeaponHolder" type="Node2D" parent="." unique_id=749241834]
 position = Vector2(63, -1)
 
-[node name="Pistol" parent="WeaponHolder" instance=ExtResource("6_pistol")]
+[node name="Pistol" parent="WeaponHolder" unique_id=1094503094 instance=ExtResource("6_pistol")]
 
-[node name="Shotgun" parent="WeaponHolder" instance=ExtResource("7_shotgun")]
+[node name="Shotgun" parent="WeaponHolder" unique_id=293091946 instance=ExtResource("7_shotgun")]
 
 [node name="WeaponComponent" type="Node" parent="." unique_id=1996894831 node_paths=PackedStringArray("weapon_holder")]
 script = ExtResource("5_weapon_component")
 weapon_holder = NodePath("../WeaponHolder")
-active_slot_index = 0
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1272165030]
+zoom = Vector2(0.5, 0.5)
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1155133397]
 shape = SubResource("CircleShape2D_cqrjx")

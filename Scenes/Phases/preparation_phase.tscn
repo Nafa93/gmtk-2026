@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/Phases/PreparationPhase.gd" id="1_phase"]
+[ext_resource type="Script" path="res://Scripts/Phases/PreparationPhaseController.gd" id="2_controller"]
+[ext_resource type="PackedScene" path="res://Scenes/Characters/Player/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/PreparationHUD.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://Scenes/main.tscn" id="5_boss_scene"]
+
+[node name="PreparationPhase" type="Node2D" node_paths=PackedStringArray("phase_controller", "hud")]
+script = ExtResource("1_phase")
+phase_controller = NodePath("PreparationPhaseController")
+hud = NodePath("PreparationHUD")
+
+[node name="PlayerSpawn" type="Marker2D" parent="."]
+position = Vector2(407, 480)
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(407, 480)
+
+[node name="PreparationPhaseController" type="Node" parent="." node_paths=PackedStringArray("player", "countdown_timer", "display_tick_timer", "transition_timer")]
+script = ExtResource("2_controller")
+total_duration = 60.0
+warning_duration = 10.0
+transition_delay = 1.5
+next_boss_scene = ExtResource("5_boss_scene")
+player = NodePath("../Player")
+countdown_timer = NodePath("CountdownTimer")
+display_tick_timer = NodePath("DisplayTickTimer")
+transition_timer = NodePath("TransitionTimer")
+
+[node name="CountdownTimer" type="Timer" parent="PreparationPhaseController"]
+one_shot = true
+
+[node name="DisplayTickTimer" type="Timer" parent="PreparationPhaseController"]
+wait_time = 0.1
+
+[node name="TransitionTimer" type="Timer" parent="PreparationPhaseController"]
+one_shot = true
+
+[node name="InteractionContainer" type="Node2D" parent="."]
+
+[node name="LootSpawnPoints" type="Node2D" parent="."]
+
+[node name="PreparationHUD" parent="." instance=ExtResource("4_hud")]
