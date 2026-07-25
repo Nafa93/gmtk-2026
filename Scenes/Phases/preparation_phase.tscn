@@ -5,12 +5,12 @@
 [ext_resource type="PackedScene" uid="uid://bk3rtxa1ypj1p" path="res://Scenes/Characters/Player/player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/PreparationHUD.tscn" id="4_hud"]
 [ext_resource type="PackedScene" uid="uid://da8sgbng7wcgu" path="res://Scenes/main.tscn" id="5_boss_scene"]
-[ext_resource type="Script" uid="uid://brqlrvwqv5xtp" path="res://Scripts/Loot/LootSpawnPoint.gd" id="6_spawn_point"]
 [ext_resource type="Script" uid="uid://8054gsdvua51" path="res://Scripts/Loot/LootDistributor.gd" id="7_distributor"]
-[ext_resource type="Resource" path="res://Resources/Loot/basic_weapon_pool.tres" id="8_pool"]
+[ext_resource type="Resource" uid="uid://b5ru8u1bu8i27" path="res://Resources/Loot/basic_weapon_pool.tres" id="8_pool"]
 [ext_resource type="PackedScene" path="res://Scenes/Loot/WeaponPickup.tscn" id="9_pickup"]
-[ext_resource type="Script" path="res://Scripts/Rooms/ProceduralRoomGenerator.gd" id="10_room_generator"]
-[ext_resource type="Script" path="res://Scripts/Rooms/PreparationFogOfWar.gd" id="11_fog"]
+[ext_resource type="Script" uid="uid://2qkrytjto6am" path="res://Scripts/Rooms/ProceduralRoomGenerator.gd" id="10_room_generator"]
+[ext_resource type="Script" uid="uid://dk2i5g5t55bbi" path="res://Scripts/Rooms/PreparationFogOfWar.gd" id="11_fog"]
+[ext_resource type="PackedScene" path="res://Scenes/Environment/WallTorch.tscn" id="12_torch"]
 
 [node name="PreparationPhase" type="Node2D" unique_id=2091941431 node_paths=PackedStringArray("phase_controller", "hud")]
 script = ExtResource("1_phase")
@@ -25,6 +25,7 @@ position = Vector2(407, 480)
 
 [node name="PreparationPhaseController" type="Node" parent="." unique_id=2089194466 node_paths=PackedStringArray("player", "countdown_timer", "display_tick_timer", "transition_timer")]
 script = ExtResource("2_controller")
+total_duration = 10.0
 next_boss_scene = ExtResource("5_boss_scene")
 player = NodePath("../Player")
 countdown_timer = NodePath("CountdownTimer")
@@ -35,14 +36,13 @@ transition_timer = NodePath("TransitionTimer")
 one_shot = true
 
 [node name="DisplayTickTimer" type="Timer" parent="PreparationPhaseController" unique_id=1779683649]
-wait_time = 1.0499999999999998
 
 [node name="TransitionTimer" type="Timer" parent="PreparationPhaseController" unique_id=1980115806]
 one_shot = true
 
 [node name="InteractionContainer" type="Node2D" parent="." unique_id=1540823158]
 
-[node name="GeneratedRooms" type="Node2D" parent="."]
+[node name="GeneratedRooms" type="Node2D" parent="." unique_id=516448617]
 
 [node name="LootSpawnPoints" type="Node2D" parent="." unique_id=1322511322]
 
@@ -54,14 +54,15 @@ loot_pool = ExtResource("8_pool")
 pickup_scene = ExtResource("9_pickup")
 output_container = NodePath("../InteractionContainer")
 
-[node name="ProceduralRoomGenerator" type="Node2D" parent="." node_paths=PackedStringArray("generation_origin", "rooms_container", "spawn_points_container", "loot_distributor")]
+[node name="ProceduralRoomGenerator" type="Node2D" parent="." unique_id=122809109 node_paths=PackedStringArray("generation_origin", "rooms_container", "spawn_points_container", "loot_distributor")]
 script = ExtResource("10_room_generator")
 generation_origin = NodePath("../PlayerSpawn")
+torch_scene = ExtResource("12_torch")
 rooms_container = NodePath("../GeneratedRooms")
 spawn_points_container = NodePath("../LootSpawnPoints")
 loot_distributor = NodePath("../LootDistributor")
 
-[node name="PreparationFogOfWar" type="Node" parent="." node_paths=PackedStringArray("player")]
+[node name="PreparationFogOfWar" type="Node" parent="." unique_id=592300981 node_paths=PackedStringArray("player")]
 script = ExtResource("11_fog")
 player = NodePath("../Player")
 

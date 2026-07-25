@@ -13,6 +13,6 @@ damage = 1
 attacks_per_second = 1.2
 automatic = false
 projectile_scene = ExtResource("3_projectile_scene")
-projectile_speed = 650.0
+projectile_speed = 780.0
 projectile_count = 8
 spread_degrees = 25.0

@@ -19,6 +19,8 @@ signal generation_finished(room_count: int, used_seed: int)
 @export_range(40.0, 200.0, 5.0, "or_greater") var obstacle_thickness: float = 75.0
 ## Must remain larger than the player's collision diameter (currently ~124 px).
 @export_range(140.0, 500.0, 5.0, "or_greater") var minimum_hallway_width: float = 280.0
+@export var torch_scene: PackedScene
+@export_range(200.0, 1000.0, 10.0, "or_greater") var torch_spacing: float = 420.0
 
 @export_group("Output")
 @export var rooms_container: Node2D
@@ -157,7 +159,13 @@ func _add_boundary_wall(
 		wall_size = Vector2(wall_thickness, room_size.y + wall_thickness)
 		wall_position = Vector2(direction.x * half_size.x, 0.0)
 
-	_add_obstacle(room, wall_position, wall_size, wall_color)
+	var wall: StaticBody2D = _add_obstacle(
+		room,
+		wall_position,
+		wall_size,
+		wall_color
+	)
+	_add_torches_to_wall(wall, wall_size, direction)
 
 
 func _build_puzzle_layout(room: Node2D, room_index: int) -> Vector2:
@@ -250,7 +258,7 @@ func _add_obstacle(
 	obstacle_position: Vector2,
 	obstacle_size: Vector2,
 	color: Color = Color.TRANSPARENT
-) -> void:
+) -> StaticBody2D:
 	var body := StaticBody2D.new()
 	body.position = obstacle_position
 	body.collision_layer = 1
@@ -273,6 +281,38 @@ func _add_obstacle(
 	])
 	visual.color = obstacle_color if color == Color.TRANSPARENT else color
 	body.add_child(visual)
+	return body
+
+
+func _add_torches_to_wall(
+	wall: StaticBody2D,
+	wall_size: Vector2,
+	outward_direction: Vector2i
+) -> void:
+	if torch_scene == null:
+		return
+
+	var wall_length: float = wall_size.x if outward_direction.y != 0 else wall_size.y
+	var torch_count: int = maxi(1, floori(wall_length / torch_spacing))
+	var inward_offset: Vector2 = -Vector2(outward_direction) * (
+		wall_thickness * 0.5 + 10.0
+	)
+
+	for index: int in range(torch_count):
+		var ratio: float = float(index + 1) / float(torch_count + 1)
+		var along_wall: float = lerpf(-wall_length * 0.5, wall_length * 0.5, ratio)
+		var torch_node: Node = torch_scene.instantiate()
+		var torch := torch_node as Node2D
+		if torch == null:
+			torch_node.free()
+			push_error("ProceduralRoomGenerator torch_scene root must be Node2D.")
+			return
+
+		wall.add_child(torch)
+		if outward_direction.y != 0:
+			torch.position = Vector2(along_wall, 0.0) + inward_offset
+		else:
+			torch.position = Vector2(0.0, along_wall) + inward_offset
 
 
 func _origin_position() -> Vector2:

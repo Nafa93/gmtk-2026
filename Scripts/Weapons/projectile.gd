@@ -8,6 +8,7 @@ const ENEMY_LAYER: int = 8
 const ENEMY_PROJECTILE_LAYER: int = 16
 
 @export_range(0.1, 60.0, 0.1, "or_greater") var max_lifetime: float = 5.0
+@export var glow_light: PointLight2D
 
 var direction: Vector2 = Vector2.ZERO
 var speed: float = 0.0
@@ -16,6 +17,11 @@ var shooter: Node = null
 
 var _elapsed_lifetime: float = 0.0
 var _has_impacted: bool = false
+
+
+func _ready() -> void:
+	if glow_light != null:
+		glow_light.texture = _create_glow_texture()
 
 
 func initialize(
@@ -112,3 +118,20 @@ func _configure_collision_for_shooter() -> void:
 		)
 		% shooter.name
 	)
+
+
+func _create_glow_texture() -> GradientTexture2D:
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(1.0, 0.95, 0.45, 1.0))
+	gradient.set_color(1, Color(1.0, 0.45, 0.05, 0.0))
+	gradient.set_offset(0, 0.0)
+	gradient.set_offset(1, 1.0)
+
+	var texture := GradientTexture2D.new()
+	texture.width = 128
+	texture.height = 128
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	texture.gradient = gradient
+	return texture

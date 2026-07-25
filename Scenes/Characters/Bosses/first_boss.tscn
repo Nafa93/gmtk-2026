@@ -19,6 +19,7 @@
 [ext_resource type="Script" uid="uid://bf3fyqwp65wla" path="res://Scripts/Bosses/States/BossAttackState.gd" id="18_attack"]
 [ext_resource type="Script" uid="uid://njngqhbj7tk" path="res://Scripts/Bosses/States/BossRecoveryState.gd" id="19_recovery"]
 [ext_resource type="Script" uid="uid://dv7tayn2shk5o" path="res://Scripts/Bosses/States/BossDeadState.gd" id="20_dead"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/FloatingHealthBar.tscn" id="21_health_bar"]
 [ext_resource type="Resource" uid="uid://cg8kbbc04ly24" path="res://Resources/Bosses/FirstBoss/tracking_burst.tres" id="21_tracking"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_boss"]
@@ -121,3 +122,7 @@ state_name = &"RECOVERY"
 [node name="Dead" type="Node" parent="StateMachine" unique_id=1966161571]
 script = ExtResource("20_dead")
 state_name = &"DEAD"
+
+[node name="FloatingHealthBar" parent="." instance=ExtResource("21_health_bar")]
+follow_offset = Vector2(0, -125)
+bar_color = Color(0.95, 0.16, 0.12, 1)

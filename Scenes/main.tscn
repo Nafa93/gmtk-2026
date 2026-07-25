@@ -2,11 +2,26 @@
 
 [ext_resource type="PackedScene" uid="uid://bk3rtxa1ypj1p" path="res://Scenes/Characters/Player/player.tscn" id="1_jjgbg"]
 [ext_resource type="PackedScene" path="res://Scenes/Characters/Bosses/first_boss.tscn" id="3_first_boss"]
+[ext_resource type="Script" path="res://Scripts/Bosses/BossArena.gd" id="4_arena"]
+[ext_resource type="PackedScene" path="res://Scenes/Environment/WallTorch.tscn" id="5_torch"]
+[ext_resource type="Script" path="res://Scripts/Bosses/BossEncounterController.gd" id="6_encounter"]
 
 [node name="Main" type="Node" unique_id=1777710215]
+
+[node name="BossArena" type="Node2D" parent="."]
+position = Vector2(650, 480)
+script = ExtResource("4_arena")
+torch_scene = ExtResource("5_torch")
 
 [node name="Player" parent="." unique_id=909364327 instance=ExtResource("1_jjgbg")]
 position = Vector2(407, 480)
 
 [node name="FirstBoss" parent="." unique_id=836087979 instance=ExtResource("3_first_boss")]
 position = Vector2(900, 480)
+
+[node name="BossEncounterController" type="Node" parent="." node_paths=PackedStringArray("player", "boss")]
+script = ExtResource("6_encounter")
+player = NodePath("../Player")
+boss = NodePath("../FirstBoss")
+defeat_scene_path = "res://Scenes/UI/DefeatScreen.tscn"
+victory_scene_path = "res://Scenes/UI/VictoryScreen.tscn"

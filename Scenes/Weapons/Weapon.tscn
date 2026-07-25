@@ -6,6 +6,7 @@
 size = Vector2(40, 14)
 
 [node name="Weapon" type="Node2D" node_paths=PackedStringArray("weapon_sprite", "muzzle", "fire_audio", "animation_player", "muzzle_flash")]
+scale = Vector2(2, 2)
 script = ExtResource("1_weapon")
 weapon_sprite = NodePath("Sprite2D")
 muzzle = NodePath("Muzzle")

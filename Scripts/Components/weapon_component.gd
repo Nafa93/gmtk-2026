@@ -256,7 +256,10 @@ func try_attack(
 	var attack_position: Vector2 = active_weapon.get_muzzle_position()
 	var resolved_direction: Vector2 = aim_direction.normalized()
 	if resolved_direction.is_zero_approx():
-		resolved_direction = attack_position.direction_to(aim_position)
+		# Aim from the actor's center while still spawning from the muzzle.
+		# Calculating from the muzzle can reverse the shot when the cursor is
+		# between the actor and the end of a long weapon.
+		resolved_direction = owner.global_position.direction_to(aim_position)
 
 	if resolved_direction.is_zero_approx():
 		push_warning(

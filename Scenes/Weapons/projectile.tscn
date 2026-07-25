@@ -1,20 +1,32 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Weapons/projectile.gd" id="1_projectile"]
+[ext_resource type="Texture2D" path="res://Assets/projectile.png" id="2_projectile_texture"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_projectile"]
 radius = 4.0
 
-[node name="Projectile" type="Area2D"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_glow"]
+blend_mode = 1
+
+[node name="Projectile" type="Area2D" node_paths=PackedStringArray("glow_light")]
+scale = Vector2(2, 2)
 collision_layer = 4
 collision_mask = 9
 monitoring = true
 monitorable = true
 script = ExtResource("1_projectile")
+glow_light = NodePath("GlowLight")
 
-[node name="Visual" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(-6, -3, 6, -3, 6, 3, -6, 3)
-color = Color(1, 0.85, 0.2, 1)
+[node name="Visual" type="Sprite2D" parent="."]
+material = SubResource("CanvasItemMaterial_glow")
+texture = ExtResource("2_projectile_texture")
+
+[node name="GlowLight" type="PointLight2D" parent="."]
+energy = 1.35
+texture_scale = 0.65
+range_z_min = -1024
+range_z_max = 1024
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_projectile")
