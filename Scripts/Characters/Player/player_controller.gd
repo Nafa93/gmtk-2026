@@ -4,6 +4,7 @@ extends CharacterBody2D
 @export var movement_component: MovementComponent
 @export var health_component: HealthComponent
 @export var weapon_component: WeaponComponent
+@export var character_sprite: AnimatedSprite2D
 
 var _nearby_interactables: Array[Node2D] = []
 
@@ -18,9 +19,12 @@ func _physics_process(_delta: float) -> void:
 	velocity = movement_component.get_velocity()
 
 	var aim_position: Vector2 = get_global_mouse_position()
-	rotation = movement_component.get_rotation(global_position, aim_position)
+	var facing_right: bool = aim_position.x >= global_position.x
+	if character_sprite != null:
+		character_sprite.flip_h = not facing_right
 
 	if weapon_component != null:
+		weapon_component.update_aim(self, aim_position)
 		if Input.is_action_just_pressed(&"CHANGE_WEAPON"):
 			weapon_component.switch_weapon()
 

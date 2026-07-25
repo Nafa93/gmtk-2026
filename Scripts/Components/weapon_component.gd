@@ -54,6 +54,24 @@ func _physics_process(delta: float) -> void:
 		_cooldowns[slot] = maxf(_cooldowns[slot] - delta, 0.0)
 
 
+func update_aim(owner: Node2D, aim_position: Vector2) -> void:
+	if owner == null or weapon_holder == null:
+		return
+
+	var aim_direction: Vector2 = owner.global_position.direction_to(aim_position)
+	if aim_direction.is_zero_approx():
+		return
+
+	# Weapon scenes are authored pointing along local +X.
+	weapon_holder.global_rotation = aim_direction.angle()
+	var facing_right: bool = aim_direction.x >= 0.0
+	weapon_holder.scale = Vector2(1.0, 1.0 if facing_right else -1.0)
+	# Keep the weapon visible above the body on both sides. The current player
+	# sprite is wider than the pistol, so drawing the left-facing weapon behind
+	# it would hide the entire gun.
+	weapon_holder.z_index = 1
+
+
 func equip_weapon(weapon_scene: PackedScene, slot: int = 0) -> bool:
 	if not _is_valid_slot(slot):
 		push_error("WeaponComponent slot must be 0 or 1; received %d." % slot)

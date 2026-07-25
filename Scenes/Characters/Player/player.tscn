@@ -12,13 +12,14 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
 radius = 62.169125
 
-[node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component", "weapon_component") groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component", "weapon_component", "character_sprite") groups=["player"]]
 collision_layer = 2
 collision_mask = 9
 script = ExtResource("1_cqrjx")
 movement_component = NodePath("MovementComponent")
 health_component = NodePath("HealthComponent")
 weapon_component = NodePath("WeaponComponent")
+character_sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1899952837]
 sprite_frames = ExtResource("1_v0iea")
@@ -32,7 +33,6 @@ behavior = NodePath("../PlayerMovementBehavior")
 [node name="PlayerMovementBehavior" parent="." unique_id=1758293071 instance=ExtResource("4_cqrjx")]
 
 [node name="WeaponHolder" type="Node2D" parent="." unique_id=749241834]
-position = Vector2(63, -1)
 
 [node name="Pistol" parent="WeaponHolder" unique_id=1094503094 instance=ExtResource("6_pistol")]
 
