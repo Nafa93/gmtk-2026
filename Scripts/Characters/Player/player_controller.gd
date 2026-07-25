@@ -19,9 +19,7 @@ func _physics_process(_delta: float) -> void:
 	velocity = movement_component.get_velocity()
 
 	var aim_position: Vector2 = get_global_mouse_position()
-	var facing_right: bool = aim_position.x >= global_position.x
-	if character_sprite != null:
-		character_sprite.flip_h = not facing_right
+	_update_character_visual(aim_position)
 
 	if weapon_component != null:
 		weapon_component.update_aim(self, aim_position)
@@ -38,6 +36,20 @@ func _physics_process(_delta: float) -> void:
 		_interact_with_nearest()
 
 	move_and_slide()
+
+
+func _update_character_visual(aim_position: Vector2) -> void:
+	if character_sprite == null:
+		return
+
+	character_sprite.rotation = 0.0
+	character_sprite.flip_h = aim_position.x < global_position.x
+
+	var desired_animation: StringName = (
+		&"idle" if velocity.is_zero_approx() else &"walk"
+	)
+	if character_sprite.animation != desired_animation:
+		character_sprite.play(desired_animation)
 
 
 func register_interactable(interactable: Node2D) -> void:

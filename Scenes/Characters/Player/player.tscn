@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/UI/FloatingHealthBar.tscn" id="8_health_bar"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
-radius = 62.169125
+radius = 32.0
 
 [node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component", "weapon_component", "character_sprite") groups=["player"]]
 collision_layer = 2
@@ -23,7 +23,11 @@ weapon_component = NodePath("WeaponComponent")
 character_sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1899952837]
+texture_filter = 1
 sprite_frames = ExtResource("1_v0iea")
+animation = &"idle"
+autoplay = "idle"
+scale = Vector2(4, 4)
 
 [node name="HealthComponent" parent="." unique_id=1478811520 instance=ExtResource("2_40svl")]
 max_health = 10
