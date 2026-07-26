@@ -7,7 +7,8 @@ signal state_changed(new_state: StringName)
 
 @export_group("Required References")
 @export var health_component: HealthComponent
-@export var boss_sprite: CanvasItem
+@export var boss_sprite: AnimatedSprite2D
+@export var sheriff_weapon: Sprite2D
 @export var collision_shape: CollisionShape2D
 
 @export_group("Boss Components")
@@ -80,6 +81,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	state_machine.after_move()
+	_update_sheriff_visuals()
 
 
 func spawn_boss_projectile(
@@ -167,6 +169,29 @@ func perform_death_cleanup() -> void:
 
 func is_dead() -> bool:
 	return _is_dead
+
+
+func _update_sheriff_visuals() -> void:
+	if boss_sprite == null:
+		return
+
+	# The boss root rotates to aim attacks and telegraphs. Keep the sheriff
+	# himself upright while the revolver, projectile origin, and telegraphs aim.
+	boss_sprite.rotation = -rotation
+	var aim_direction: Vector2 = targeting.get_direction_from(global_position)
+	if not aim_direction.is_zero_approx():
+		var facing_left: bool = aim_direction.x < 0.0
+		boss_sprite.flip_h = facing_left
+		if sheriff_weapon != null:
+			# Flip across the weapon's local axis when aiming left so the
+			# revolver grip remains below the barrel.
+			sheriff_weapon.scale = Vector2(2.0, -2.0 if facing_left else 2.0)
+
+	var desired_animation: StringName = (
+		&"idle" if velocity.is_zero_approx() else &"walk"
+	)
+	if boss_sprite.animation != desired_animation:
+		boss_sprite.play(desired_animation)
 
 
 func _validate_required_references() -> bool:

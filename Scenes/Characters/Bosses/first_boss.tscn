@@ -26,6 +26,8 @@
 [ext_resource type="Script" path="res://Scripts/Bosses/Components/BossBombSpawner.gd" id="24_bomb_spawner"]
 [ext_resource type="Resource" path="res://Resources/Bosses/FirstBoss/summon_minions.tres" id="25_summon"]
 [ext_resource type="Script" path="res://Scripts/UI/WesternKeyPanel.gd" id="26_dialog_panel"]
+[ext_resource type="Texture2D" uid="uid://b0tpm8ylfda2d" path="res://Assets/revolver-Sheet.png" id="27_revolver"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/Weapons/pistol.wav" id="28_revolver_sound"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_boss"]
 radius = 54.0
@@ -33,12 +35,13 @@ radius = 54.0
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_dialog_unshaded"]
 light_mode = 1
 
-[node name="FirstBoss" type="CharacterBody2D" unique_id=899738219 node_paths=PackedStringArray("health_component", "boss_sprite", "collision_shape", "state_machine", "dead_state", "targeting", "attack_scheduler", "projectile_emitter", "telegraph_presenter", "phase_controller", "bomb_spawner") groups=["boss", "enemy"]]
+[node name="FirstBoss" type="CharacterBody2D" unique_id=899738219 node_paths=PackedStringArray("health_component", "boss_sprite", "sheriff_weapon", "collision_shape", "state_machine", "dead_state", "targeting", "attack_scheduler", "projectile_emitter", "telegraph_presenter", "phase_controller", "bomb_spawner") groups=["boss", "enemy"]]
 collision_layer = 8
 collision_mask = 3
 script = ExtResource("1_controller")
 health_component = NodePath("HealthComponent")
 boss_sprite = NodePath("AnimatedSprite2D")
+sheriff_weapon = NodePath("SheriffWeapon")
 collision_shape = NodePath("CollisionShape2D")
 state_machine = NodePath("StateMachine")
 dead_state = NodePath("StateMachine/Dead")
@@ -50,9 +53,17 @@ phase_controller = NodePath("BossComponents/PhaseController")
 bomb_spawner = NodePath("BossComponents/BombSpawner")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=979432517]
-modulate = Color(0.7, 0.25, 1, 1)
-scale = Vector2(1.35, 1.35)
+scale = Vector2(5, 5)
 sprite_frames = ExtResource("2_frames")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="SheriffWeapon" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(0, -38)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("27_revolver")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1348610606]
 shape = SubResource("CircleShape2D_boss")
@@ -79,6 +90,8 @@ width = 6.0
 bus = &"SFX"
 
 [node name="AttackAudio" type="AudioStreamPlayer2D" parent="." unique_id=713079879]
+stream = ExtResource("28_revolver_sound")
+max_polyphony = 6
 bus = &"SFX"
 
 [node name="IntroDialog" type="Node2D" parent="."]
@@ -186,6 +199,6 @@ script = ExtResource("20_dead")
 state_name = &"DEAD"
 
 [node name="FloatingHealthBar" parent="." instance=ExtResource("21_health_bar")]
-follow_offset = Vector2(0, -125)
+follow_offset = Vector2(0, 125)
 bar_color = Color(0.66, 0.29, 0.18, 1)
 section_count = 5

@@ -15,22 +15,17 @@ run/main_scene="res://Scenes/UI/StartMenu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
-[display]
-
-window/size/viewport_width=1152
-window/size/viewport_height=648
-window/size/window_width_override=1152
-window/size/window_height_override=648
-window/size/resizable=true
-window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
-window/stretch/scale_mode="fractional"
-
 [autoload]
 
 RunLoadout="*res://Scripts/Run/RunLoadout.gd"
 SceneTransition="*res://Scenes/UI/SceneTransition.tscn"
 TimeLighting="*res://Scripts/Environment/TimeLightingController.gd"
+
+[display]
+
+window/size/window_width_override=1152
+window/size/window_height_override=648
+window/stretch/mode="canvas_items"
 
 [global_group]
 
@@ -94,7 +89,6 @@ INTERACT={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
-textures/canvas_textures/default_texture_filter=0
-textures/default_filters/use_nearest_mipmap_filter=false
