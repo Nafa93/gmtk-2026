@@ -18,13 +18,13 @@ extends CanvasLayer
 @export_file("*.tscn") var main_menu_scene_path: String = "res://Scenes/UI/StartMenu.tscn"
 @export var show_time_feedback: bool = true
 @export var normal_timer_color: Color = Color(0.94, 0.84, 0.63)
-@export var warning_timer_color: Color = Color(0.66, 0.29, 0.18)
-@export_range(0.0, 1.0, 0.05) var pulse_intensity: float = 0.25
-@export_range(0.1, 10.0, 0.1, "or_greater") var pulse_frequency: float = 3.0
+@export var warning_timer_color: Color = Color(0.78, 0.16, 0.09)
+@export_range(0.0, 0.2, 0.005) var pulse_intensity: float = 0.025
+@export_range(0.1, 10.0, 0.1, "or_greater") var pulse_frequency: float = 1.4
 
 var _weapon_component: WeaponComponent
 var _time_health: TimeHealthComponent
-var _critical: bool = false
+var _time_urgency_level: int = 0
 var _feedback_generation: int = 0
 
 
@@ -88,12 +88,16 @@ func _return_to_main_menu() -> void:
 
 
 func _process(_delta: float) -> void:
-	if timer_label == null or not _critical:
+	if timer_label == null or _time_urgency_level <= 0:
 		return
+	var urgency: float = float(_time_urgency_level)
 	var wave: float = (sin(
-		Time.get_ticks_msec() / 1000.0 * TAU * pulse_frequency
+		Time.get_ticks_msec() / 1000.0
+		* TAU
+		* (pulse_frequency + urgency * 0.25)
 	) + 1.0) * 0.5
-	timer_label.scale = Vector2.ONE * (1.0 + pulse_intensity * wave)
+	var band_intensity: float = pulse_intensity * urgency
+	timer_label.scale = Vector2.ONE * (1.0 + band_intensity * wave)
 
 
 func bind_to_controller(controller: PreparationPhaseController) -> void:
@@ -149,6 +153,7 @@ func _on_time_changed(current_time: float, _maximum_time: float) -> void:
 	if timer_label == null:
 		return
 	timer_label.text = "TIME  %s" % _format_time(current_time)
+	_update_timer_urgency(current_time)
 
 
 func _on_time_lost(amount: float, source: StringName) -> void:
@@ -168,9 +173,6 @@ func _on_time_critical() -> void:
 
 
 func _on_warning_started(_seconds_remaining: float) -> void:
-	_critical = true
-	if timer_label != null:
-		timer_label.modulate = warning_timer_color
 	if warning_label != null:
 		warning_label.text = "CRITICAL TIME"
 		warning_label.visible = true
@@ -179,14 +181,33 @@ func _on_warning_started(_seconds_remaining: float) -> void:
 
 
 func _on_warning_ended() -> void:
-	_critical = false
-	if timer_label != null:
-		timer_label.modulate = normal_timer_color
-		timer_label.scale = Vector2.ONE
+	if _time_health != null:
+		_update_timer_urgency(_time_health.current_time)
 	if warning_label != null:
 		warning_label.visible = false
 	if warning_audio != null:
 		warning_audio.stop()
+
+
+func _update_timer_urgency(current_time: float) -> void:
+	if current_time <= 15.0:
+		_time_urgency_level = 3
+	elif current_time <= 30.0:
+		_time_urgency_level = 2
+	elif current_time <= 45.0:
+		_time_urgency_level = 1
+	else:
+		_time_urgency_level = 0
+
+	if timer_label == null:
+		return
+	var color_progress: float = float(_time_urgency_level) / 3.0
+	timer_label.modulate = normal_timer_color.lerp(
+		warning_timer_color,
+		color_progress
+	)
+	if _time_urgency_level == 0:
+		timer_label.scale = Vector2.ONE
 
 
 func _on_boss_hold_progress_changed(progress: float) -> void:

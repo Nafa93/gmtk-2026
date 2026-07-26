@@ -23,7 +23,7 @@ content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="KeycapStyle"]
 
-[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "primary_weapon_icon", "secondary_weapon_icon", "warning_label", "boss_prompt_label", "boss_hold_progress", "warning_audio", "pause_button", "pause_overlay", "resume_button", "main_menu_button")]
+[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "primary_weapon_icon", "secondary_weapon_icon", "boss_prompt_label", "boss_hold_progress", "warning_audio", "pause_button", "pause_overlay", "resume_button", "main_menu_button")]
 script = ExtResource("1_hud")
 timer_label = NodePath("TopLeft/VBox/TimeRow/TimerLabel")
 feedback_label = NodePath("TopLeft/VBox/TimeRow/FeedbackLabel")
@@ -31,7 +31,6 @@ primary_weapon_label = NodePath("WeaponSlots/Row/PrimaryCard/VBox/Content/Weapon
 secondary_weapon_label = NodePath("WeaponSlots/Row/SecondaryCard/VBox/Content/WeaponName")
 primary_weapon_icon = NodePath("WeaponSlots/Row/PrimaryCard/VBox/Content/Icon")
 secondary_weapon_icon = NodePath("WeaponSlots/Row/SecondaryCard/VBox/Content/Icon")
-warning_label = NodePath("WarningLabel")
 boss_prompt_label = NodePath("BossPrompt")
 boss_hold_progress = NodePath("BossHoldProgress")
 warning_audio = NodePath("WarningAudio")
@@ -61,20 +60,6 @@ text = "TIME  01:00"
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "+2.0s"
-
-[node name="WarningLabel" type="Label" parent="."]
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 42.0
-offset_bottom = 118.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.66, 0.29, 0.18, 1)
-theme_override_colors/font_outline_color = Color(0.025, 0.018, 0.012, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "CRITICAL TIME"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="BossPrompt" type="Label" parent="."]
 anchors_preset = 12
