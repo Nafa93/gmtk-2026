@@ -50,6 +50,19 @@ func transition_to_packed(
 	_finish_transition()
 
 
+func transition_to_file(
+	scene_path: String,
+	screen_center: Vector2 = Vector2(0.5, 0.5)
+) -> void:
+	if scene_path.is_empty():
+		return
+	var next_scene: PackedScene = load(scene_path) as PackedScene
+	if next_scene == null:
+		push_error("Could not load transition scene: %s." % scene_path)
+		return
+	transition_to_packed(next_scene, screen_center)
+
+
 func _set_radius(value: float) -> void:
 	_set_shader_parameter(&"radius", value)
 

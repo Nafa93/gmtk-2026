@@ -10,7 +10,7 @@ signal generation_finished(room_count: int, used_seed: int)
 @export var generation_origin: Node2D
 
 @export_group("Room Geometry")
-@export var room_size: Vector2 = Vector2(1100.0, 800.0)
+@export var room_size: Vector2 = Vector2(2200.0, 1600.0)
 @export_range(1.0, 100.0, 1.0, "or_greater") var wall_thickness: float = 20.0
 @export var floor_color: Color = Color(0.12, 0.14, 0.18, 1.0)
 @export var alternate_floor_color: Color = Color(0.16, 0.18, 0.23, 1.0)
@@ -56,7 +56,11 @@ func generate() -> void:
 		_build_room(generated_cells[index], index, occupied)
 
 	if loot_distributor != null:
-		loot_distributor.total_weapon_count = generated_cells.size()
+		loot_distributor.total_weapon_count = (
+			loot_distributor.loot_pool.get_valid_weapon_scenes().size()
+			if loot_distributor.loot_pool != null
+			else 0
+		)
 		loot_distributor.distance_origin = generation_origin
 		loot_distributor.distribute()
 

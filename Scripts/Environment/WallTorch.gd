@@ -8,11 +8,13 @@ extends Node2D
 
 var _elapsed: float = 0.0
 var _base_energy: float = 1.0
+var _base_texture_scale: float = 1.0
 
 
 func _ready() -> void:
 	if torch_light != null:
 		_base_energy = torch_light.energy
+		_base_texture_scale = torch_light.texture_scale
 		torch_light.texture = _create_light_texture()
 
 
@@ -23,7 +25,20 @@ func _process(delta: float) -> void:
 	if torch_light != null:
 		var flicker: float = sin(_elapsed * 17.0) * 0.65
 		flicker += sin(_elapsed * 31.0) * 0.35
-		torch_light.energy = _base_energy * (1.0 + flicker * flicker_amount)
+		var brightness_multiplier: float = 1.0
+		var time_lighting := get_node_or_null(
+			"/root/TimeLighting"
+		) as TimeLightingController
+		if time_lighting != null:
+			brightness_multiplier = time_lighting.get_brightness_multiplier()
+			torch_light.texture_scale = (
+				_base_texture_scale * time_lighting.get_size_multiplier()
+			)
+		torch_light.energy = (
+			_base_energy
+			* (1.0 + flicker * flicker_amount)
+			* brightness_multiplier
+		)
 
 
 func _create_light_texture() -> GradientTexture2D:

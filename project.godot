@@ -24,6 +24,7 @@ window/stretch/scale_mode="integer"
 
 RunLoadout="*res://Scripts/Run/RunLoadout.gd"
 SceneTransition="*res://Scenes/UI/SceneTransition.tscn"
+TimeLighting="*res://Scripts/Environment/TimeLightingController.gd"
 
 [global_group]
 

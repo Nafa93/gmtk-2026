@@ -83,4 +83,10 @@ func _request_result(result_scene_path: String) -> void:
 	if run_state != null:
 		run_state.print_time_summary()
 	if not result_scene_path.is_empty():
-		get_tree().call_deferred(&"change_scene_to_file", result_scene_path)
+		var transition := get_node_or_null(
+			"/root/SceneTransition"
+		) as SceneTransitionController
+		if transition != null:
+			transition.transition_to_file(result_scene_path)
+		else:
+			get_tree().call_deferred(&"change_scene_to_file", result_scene_path)

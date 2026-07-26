@@ -12,7 +12,13 @@ func _on_retry_pressed() -> void:
 	if run_loadout != null:
 		run_loadout.reset_run()
 	if not menu_scene_path.is_empty():
-		get_tree().change_scene_to_file(menu_scene_path)
+		var transition := get_node_or_null(
+			"/root/SceneTransition"
+		) as SceneTransitionController
+		if transition != null:
+			transition.transition_to_file(menu_scene_path)
+		else:
+			get_tree().change_scene_to_file(menu_scene_path)
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()

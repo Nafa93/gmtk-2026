@@ -6,19 +6,34 @@ extends CharacterBody2D
 @export var weapon_component: WeaponComponent
 @export var character_sprite: AnimatedSprite2D
 @export var replace_weapon_hint: Control
+@export var opening_dialog: CanvasItem
 @export_group("Damage Response")
 @export_range(0.0, 5000.0, 10.0, "or_greater") var knockback_decay: float = 1500.0
 
 var _nearby_interactables: Array[Node2D] = []
 var _knockback_velocity: Vector2 = Vector2.ZERO
+var _dialog_generation: int = 0
 
 
 func _ready() -> void:
 	if replace_weapon_hint != null:
 		replace_weapon_hint.visible = false
+	if opening_dialog != null:
+		opening_dialog.visible = false
 	var run_loadout := get_node_or_null("/root/RunLoadout") as RunLoadoutState
 	if run_loadout != null and run_loadout.has_loadout():
 		run_loadout.apply_to(weapon_component)
+
+
+func show_opening_dialog(duration: float = 5.0) -> void:
+	if opening_dialog == null:
+		return
+	_dialog_generation += 1
+	var generation: int = _dialog_generation
+	opening_dialog.visible = true
+	await get_tree().create_timer(duration).timeout
+	if generation == _dialog_generation and is_instance_valid(opening_dialog):
+		opening_dialog.visible = false
 
 
 func _physics_process(delta: float) -> void:

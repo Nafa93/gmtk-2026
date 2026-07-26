@@ -136,6 +136,7 @@ func _initialize_phase() -> void:
 		run_state.mark_preparation_started(_time_health)
 
 	player_resolved.emit(player)
+	player.show_opening_dialog()
 	time_remaining_changed.emit(_time_health.current_time)
 	_set_interactions_enabled(true)
 	_set_state(PhaseState.LOOTING)
@@ -234,7 +235,13 @@ func _on_time_depleted() -> void:
 	_set_state(PhaseState.COMPLETED)
 	phase_completed.emit()
 	if defeat_scene != null:
-		get_tree().call_deferred(&"change_scene_to_packed", defeat_scene)
+		var scene_transition := (
+			get_node_or_null("/root/SceneTransition") as SceneTransitionController
+		)
+		if scene_transition != null:
+			scene_transition.transition_to_packed(defeat_scene)
+		else:
+			get_tree().call_deferred(&"change_scene_to_packed", defeat_scene)
 
 
 func _begin_transition() -> void:

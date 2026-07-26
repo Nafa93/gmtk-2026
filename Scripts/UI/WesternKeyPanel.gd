@@ -4,13 +4,15 @@ extends PanelContainer
 @export var face_color: Color = Color(0.84, 0.64, 0.28)
 @export var edge_color: Color = Color(0.48, 0.22, 0.13)
 @export var shadow_color: Color = Color(0.16, 0.075, 0.04, 0.98)
+@export_range(0.0, 40.0, 1.0) var horizontal_content_padding: float = 4.0
+@export_range(0.0, 40.0, 1.0) var top_content_padding: float = 8.0
 
 
 func _ready() -> void:
 	var content_inset := StyleBoxEmpty.new()
-	content_inset.content_margin_left = 4.0
-	content_inset.content_margin_top = 8.0
-	content_inset.content_margin_right = 4.0
+	content_inset.content_margin_left = horizontal_content_padding
+	content_inset.content_margin_top = top_content_padding
+	content_inset.content_margin_right = horizontal_content_padding
 	content_inset.content_margin_bottom = 0.0
 	add_theme_stylebox_override(&"panel", content_inset)
 	resized.connect(queue_redraw)

@@ -58,6 +58,7 @@ func distribute() -> int:
 		if loot_pool != null
 		else []
 	)
+	available_weapons = _get_unique_weapon_scenes(available_weapons)
 
 	if available_weapons.is_empty():
 		push_warning("LootDistributor has no valid weapon scenes in its LootPool.")
@@ -73,7 +74,10 @@ func distribute() -> int:
 	else:
 		_shuffle_points(available_points)
 	var requested_count: int = maxi(total_weapon_count, 0)
-	var spawn_count: int = mini(requested_count, available_points.size())
+	var spawn_count: int = mini(
+		requested_count,
+		mini(available_points.size(), available_weapons.size())
+	)
 
 	if spawn_count < requested_count:
 		push_warning(
@@ -98,6 +102,7 @@ func distribute() -> int:
 				_rng.randi_range(0, available_weapons.size() - 1)
 			]
 		_spawn_weapon(point, weapon_scene)
+		available_weapons.erase(weapon_scene)
 
 	distribution_finished.emit(spawned_pickups.size(), used_seed)
 	return spawned_pickups.size()
@@ -171,6 +176,22 @@ func _shuffle_points(points: Array[LootSpawnPoint]) -> void:
 		var temporary: LootSpawnPoint = points[index]
 		points[index] = points[swap_index]
 		points[swap_index] = temporary
+
+
+func _get_unique_weapon_scenes(
+	weapon_scenes: Array[PackedScene]
+) -> Array[PackedScene]:
+	var unique_scenes: Array[PackedScene] = []
+	var known_paths: Dictionary = {}
+	for weapon_scene: PackedScene in weapon_scenes:
+		if weapon_scene == null:
+			continue
+		var scene_path: String = weapon_scene.resource_path
+		if known_paths.has(scene_path):
+			continue
+		known_paths[scene_path] = true
+		unique_scenes.append(weapon_scene)
+	return unique_scenes
 
 
 func _sort_points_by_distance(points: Array[LootSpawnPoint]) -> void:
