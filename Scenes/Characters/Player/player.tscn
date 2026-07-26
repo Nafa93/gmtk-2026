@@ -14,6 +14,9 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
 radius = 32.0
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_dialog_unshaded"]
+light_mode = 1
+
 [node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component", "weapon_component", "character_sprite", "replace_weapon_hint", "opening_dialog") groups=["player"]]
 collision_layer = 2
 collision_mask = 9
@@ -44,12 +47,10 @@ behavior = NodePath("../PlayerMovementBehavior")
 
 [node name="Pistol" parent="WeaponHolder" unique_id=1094503094 instance=ExtResource("6_pistol")]
 
-[node name="Shotgun" parent="WeaponHolder" unique_id=293091946 instance=ExtResource("7_shotgun")]
-
 [node name="WeaponComponent" type="Node" parent="." unique_id=1996894831 node_paths=PackedStringArray("weapon_holder")]
 script = ExtResource("5_weapon_component")
 weapon_holder = NodePath("../WeaponHolder")
-starting_weapon_scenes = Array[PackedScene]([ExtResource("6_pistol"), ExtResource("7_shotgun")])
+starting_weapon_scenes = Array[PackedScene]([ExtResource("6_pistol")])
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1272165030]
 zoom = Vector2(0.5, 0.5)
@@ -84,18 +85,22 @@ position = Vector2(0, -90)
 scale = Vector2(2, 2)
 
 [node name="TailShadow" type="Polygon2D" parent="OpeningDialog"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
 polygon = PackedVector2Array(-14, -18, 14, -18, 8, -12, 4, -12, 4, -4, 0, 0, -4, -4, -4, -12, -8, -12)
 color = Color(0.16, 0.075, 0.04, 1)
 
 [node name="TailEdge" type="Polygon2D" parent="OpeningDialog"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
 polygon = PackedVector2Array(-12, -22, 12, -22, 8, -18, 4, -18, 4, -10, 0, -6, -4, -10, -4, -18, -8, -18)
 color = Color(0.48, 0.22, 0.13, 1)
 
 [node name="TailFace" type="Polygon2D" parent="OpeningDialog"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
 polygon = PackedVector2Array(-8, -22, 8, -22, 4, -18, 2, -18, 2, -12, 0, -10, -2, -12, -2, -18, -4, -18)
 color = Color(0.84, 0.64, 0.28, 1)
 
 [node name="Bubble" type="PanelContainer" parent="OpeningDialog"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
 offset_left = -150.0
 offset_top = -120.0
 offset_right = 150.0
@@ -104,10 +109,11 @@ script = ExtResource("9_key_panel")
 horizontal_content_padding = 14.0
 
 [node name="Text" type="Label" parent="OpeningDialog/Bubble"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
 layout_mode = 2
 theme_override_colors/font_color = Color(0.105, 0.075, 0.045, 1)
 theme_override_font_sizes/font_size = 12
-text = "Before time runs out, I need to find the weapons that damned sheriff hid."
+text = "I need to find some better weapons before facing the sheriff."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2

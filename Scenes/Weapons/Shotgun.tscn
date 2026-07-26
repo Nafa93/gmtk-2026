@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://d0fmnxqctl5qd"]
+[gd_scene load_steps=5 format=3 uid="uid://d0fmnxqctl5qd"]
 
 [ext_resource type="PackedScene" path="res://Scenes/Weapons/Weapon.tscn" id="1_weapon"]
 [ext_resource type="Resource" path="res://Resources/Weapons/shotgun.tres" id="2_data"]
 [ext_resource type="Texture2D" path="res://Assets/shotgun.png" id="3_shotgun_texture"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/Weapons/shotgun.wav" id="4_fire_sound"]
 
 [node name="Shotgun" unique_id=554222346 instance=ExtResource("1_weapon")]
 data = ExtResource("2_data")
@@ -14,6 +15,10 @@ texture = ExtResource("3_shotgun_texture")
 
 [node name="Muzzle" parent="." index="1"]
 position = Vector2(86, 0)
+
+[node name="FireAudio" parent="." index="2"]
+stream = ExtResource("4_fire_sound")
+max_polyphony = 3
 
 [node name="MuzzleFlash" parent="." index="4"]
 position = Vector2(86, 0)

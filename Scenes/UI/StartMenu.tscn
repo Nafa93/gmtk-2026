@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Scripts/UI/ResponsiveLabel.gd" id="2_responsive"]
 [ext_resource type="Script" path="res://Scripts/UI/WesternButton.gd" id="3_button"]
 
-[node name="StartMenu" type="Control" node_paths=PackedStringArray("start_button", "quit_button")]
+[node name="StartMenu" type="Control" node_paths=PackedStringArray("start_button", "credits_button", "quit_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +13,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
 start_scene_path = "res://Scenes/Phases/preparation_phase.tscn"
+credits_scene_path = "res://Scenes/UI/CreditsScreen.tscn"
 start_button = NodePath("Center/VBox/Buttons/Start")
+credits_button = NodePath("Center/VBox/Buttons/Credits")
 quit_button = NodePath("Center/VBox/Buttons/Quit")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -77,6 +79,15 @@ text = "START RUN"
 script = ExtResource("3_button")
 display_font_size = 28
 
+[node name="Credits" type="Button" parent="Center/VBox/Buttons"]
+custom_minimum_size = Vector2(360, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+text = "CREDITS"
+script = ExtResource("3_button")
+display_font_size = 28
+
 [node name="Quit" type="Button" parent="Center/VBox/Buttons"]
 custom_minimum_size = Vector2(360, 64)
 layout_mode = 2
@@ -87,4 +98,5 @@ script = ExtResource("3_button")
 display_font_size = 28
 
 [connection signal="pressed" from="Center/VBox/Buttons/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Center/VBox/Buttons/Credits" to="." method="_on_credits_pressed"]
 [connection signal="pressed" from="Center/VBox/Buttons/Quit" to="." method="_on_quit_pressed"]

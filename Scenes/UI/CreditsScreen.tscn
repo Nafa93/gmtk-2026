@@ -1,0 +1,185 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/CreditsScreen.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/UI/ResponsiveLabel.gd" id="2_responsive"]
+[ext_resource type="Script" path="res://Scripts/UI/WesternButton.gd" id="3_button"]
+[ext_resource type="Script" path="res://Scripts/UI/WesternKeyPanel.gd" id="4_card"]
+
+[node name="CreditsScreen" type="Control" node_paths=PackedStringArray("back_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+back_button = NodePath("Center/VBox/Back")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.045, 0.032, 0.022, 1)
+mouse_filter = 2
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 42
+text = "CREDITS"
+horizontal_alignment = 1
+script = ExtResource("2_responsive")
+minimum_font_size = 24
+maximum_font_size = 42
+maximum_viewport_width_ratio = 0.88
+
+[node name="Cards" type="HBoxContainer" parent="Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Development" type="PanelContainer" parent="Center/VBox/Cards"]
+custom_minimum_size = Vector2(240, 264)
+layout_mode = 2
+script = ExtResource("4_card")
+face_color = Color(0.15, 0.075, 0.04, 1)
+horizontal_content_padding = 16.0
+top_content_padding = 18.0
+
+[node name="VBox" type="VBoxContainer" parent="Center/VBox/Cards/Development"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="Center/VBox/Cards/Development/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 18
+text = "DEVELOPMENT"
+horizontal_alignment = 1
+
+[node name="Matias" type="VBoxContainer" parent="Center/VBox/Cards/Development/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Name" type="Label" parent="Center/VBox/Cards/Development/VBox/Matias"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "MATIAS CORONEL"
+horizontal_alignment = 1
+
+[node name="Role" type="Label" parent="Center/VBox/Cards/Development/VBox/Matias"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 11
+text = "PROGRAMMING & ART"
+horizontal_alignment = 1
+
+[node name="Nicolas" type="VBoxContainer" parent="Center/VBox/Cards/Development/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Name" type="Label" parent="Center/VBox/Cards/Development/VBox/Nicolas"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "NICOLAS AMOROSINO"
+horizontal_alignment = 1
+
+[node name="Role" type="Label" parent="Center/VBox/Cards/Development/VBox/Nicolas"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 11
+text = "PROGRAMMING & ART"
+horizontal_alignment = 1
+
+[node name="Audio" type="PanelContainer" parent="Center/VBox/Cards"]
+custom_minimum_size = Vector2(240, 264)
+layout_mode = 2
+script = ExtResource("4_card")
+face_color = Color(0.15, 0.075, 0.04, 1)
+horizontal_content_padding = 16.0
+top_content_padding = 18.0
+
+[node name="VBox" type="VBoxContainer" parent="Center/VBox/Cards/Audio"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="SoundTitle" type="Label" parent="Center/VBox/Cards/Audio/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 16
+text = "SOUND EFFECTS"
+horizontal_alignment = 1
+
+[node name="SoundNames" type="VBoxContainer" parent="Center/VBox/Cards/Audio/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Clueless79" type="Label" parent="Center/VBox/Cards/Audio/VBox/SoundNames"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "CLUELESS79"
+horizontal_alignment = 1
+
+[node name="SeanMorrissey96" type="Label" parent="Center/VBox/Cards/Audio/VBox/SoundNames"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "SEANMORRISSEY96"
+horizontal_alignment = 1
+
+[node name="OkieActor" type="Label" parent="Center/VBox/Cards/Audio/VBox/SoundNames"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "OKIEACTOR"
+horizontal_alignment = 1
+
+[node name="MusicTitle" type="Label" parent="Center/VBox/Cards/Audio/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 16
+text = "MUSIC"
+horizontal_alignment = 1
+
+[node name="MusicNames" type="VBoxContainer" parent="Center/VBox/Cards/Audio/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="AtlasAudio" type="Label" parent="Center/VBox/Cards/Audio/VBox/MusicNames"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "ATLASAUDIO"
+horizontal_alignment = 1
+
+[node name="PositiveSound" type="Label" parent="Center/VBox/Cards/Audio/VBox/MusicNames"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "POSITIVE_SOUND"
+horizontal_alignment = 1
+
+[node name="Back" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(360, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+text = "BACK"
+script = ExtResource("3_button")
+display_font_size = 28
+
+[connection signal="pressed" from="Center/VBox/Back" to="." method="_on_back_pressed"]

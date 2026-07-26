@@ -78,6 +78,11 @@ func distribute() -> int:
 		requested_count,
 		mini(available_points.size(), available_weapons.size())
 	)
+	var selected_points: Array[LootSpawnPoint] = (
+		_select_spread_points(available_points, spawn_count)
+		if use_distance_rating
+		else available_points.slice(0, spawn_count)
+	)
 
 	if spawn_count < requested_count:
 		push_warning(
@@ -89,7 +94,7 @@ func distribute() -> int:
 		)
 
 	for index: int in range(spawn_count):
-		var point: LootSpawnPoint = available_points[index]
+		var point: LootSpawnPoint = selected_points[index]
 		var weapon_scene: PackedScene
 		if use_distance_rating:
 			weapon_scene = _select_weapon_for_point(
@@ -106,6 +111,36 @@ func distribute() -> int:
 
 	distribution_finished.emit(spawned_pickups.size(), used_seed)
 	return spawned_pickups.size()
+
+
+func _select_spread_points(
+	sorted_points: Array[LootSpawnPoint],
+	count: int
+) -> Array[LootSpawnPoint]:
+	var selected: Array[LootSpawnPoint] = []
+	if count <= 0 or sorted_points.is_empty():
+		return selected
+	if count == 1:
+		selected.append(sorted_points[sorted_points.size() - 1])
+		return selected
+
+	# Spread the two unique weapons through the middle of the layout. Sending the
+	# highest-rated weapon to the absolute farthest room made it too easy to miss
+	# before the automatic boss transition.
+	var minimum_distance_ratio: float = 0.35
+	var maximum_distance_ratio: float = 0.65
+	for index: int in range(count):
+		var distribution_ratio: float = float(index) / float(count - 1)
+		var ratio: float = lerpf(
+			minimum_distance_ratio,
+			maximum_distance_ratio,
+			distribution_ratio
+		)
+		var point_index: int = roundi(
+			ratio * float(sorted_points.size() - 1)
+		)
+		selected.append(sorted_points[point_index])
+	return selected
 
 
 func clear_generated_loot() -> void:

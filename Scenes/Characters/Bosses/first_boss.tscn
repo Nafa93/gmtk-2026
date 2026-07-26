@@ -25,9 +25,13 @@
 [ext_resource type="PackedScene" path="res://Scenes/Characters/Enemies/boss_bomb.tscn" id="23_bomb"]
 [ext_resource type="Script" path="res://Scripts/Bosses/Components/BossBombSpawner.gd" id="24_bomb_spawner"]
 [ext_resource type="Resource" path="res://Resources/Bosses/FirstBoss/summon_minions.tres" id="25_summon"]
+[ext_resource type="Script" path="res://Scripts/UI/WesternKeyPanel.gd" id="26_dialog_panel"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_boss"]
 radius = 54.0
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_dialog_unshaded"]
+light_mode = 1
 
 [node name="FirstBoss" type="CharacterBody2D" unique_id=899738219 node_paths=PackedStringArray("health_component", "boss_sprite", "collision_shape", "state_machine", "dead_state", "targeting", "attack_scheduler", "projectile_emitter", "telegraph_presenter", "phase_controller", "bomb_spawner") groups=["boss", "enemy"]]
 collision_layer = 8
@@ -72,8 +76,50 @@ width = 6.0
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1140074556]
 
 [node name="TelegraphAudio" type="AudioStreamPlayer2D" parent="." unique_id=521673423]
+bus = &"SFX"
 
 [node name="AttackAudio" type="AudioStreamPlayer2D" parent="." unique_id=713079879]
+bus = &"SFX"
+
+[node name="IntroDialog" type="Node2D" parent="."]
+visible = false
+z_index = 25
+position = Vector2(0, -105)
+scale = Vector2(2, 2)
+
+[node name="TailShadow" type="Polygon2D" parent="IntroDialog"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
+polygon = PackedVector2Array(-14, -18, 14, -18, 8, -12, 4, -12, 4, -4, 0, 0, -4, -4, -4, -12, -8, -12)
+color = Color(0.16, 0.075, 0.04, 1)
+
+[node name="TailEdge" type="Polygon2D" parent="IntroDialog"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
+polygon = PackedVector2Array(-12, -22, 12, -22, 8, -18, 4, -18, 4, -10, 0, -6, -4, -10, -4, -18, -8, -18)
+color = Color(0.48, 0.22, 0.13, 1)
+
+[node name="TailFace" type="Polygon2D" parent="IntroDialog"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
+polygon = PackedVector2Array(-8, -22, 8, -22, 4, -18, 2, -18, 2, -12, 0, -10, -2, -12, -2, -18, -4, -18)
+color = Color(0.84, 0.64, 0.28, 1)
+
+[node name="Bubble" type="PanelContainer" parent="IntroDialog"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
+offset_left = -95.0
+offset_top = -76.0
+offset_right = 95.0
+offset_bottom = -20.0
+script = ExtResource("26_dialog_panel")
+horizontal_content_padding = 14.0
+
+[node name="Text" type="Label" parent="IntroDialog/Bubble"]
+material = SubResource("CanvasItemMaterial_dialog_unshaded")
+layout_mode = 2
+theme_override_colors/font_color = Color(0.105, 0.075, 0.045, 1)
+theme_override_font_sizes/font_size = 12
+text = "We will see."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="BossComponents" type="Node" parent="." unique_id=684783887]
 

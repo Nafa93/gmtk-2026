@@ -36,6 +36,15 @@ func show_opening_dialog(duration: float = 5.0) -> void:
 		opening_dialog.visible = false
 
 
+func show_dialog(message: String, duration: float = 3.0) -> void:
+	if opening_dialog == null:
+		return
+	var text_label := opening_dialog.get_node_or_null("Bubble/Text") as Label
+	if text_label != null:
+		text_label.text = message
+	show_opening_dialog(duration)
+
+
 func _physics_process(delta: float) -> void:
 	_knockback_velocity = _knockback_velocity.move_toward(
 		Vector2.ZERO,

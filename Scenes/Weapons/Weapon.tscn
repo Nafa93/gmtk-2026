@@ -21,6 +21,7 @@ texture = SubResource("PlaceholderTexture2D_weapon")
 position = Vector2(0, -28)
 
 [node name="FireAudio" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 

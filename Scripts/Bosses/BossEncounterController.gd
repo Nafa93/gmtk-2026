@@ -3,11 +3,14 @@ extends Node
 @export var player: PlayerController
 @export var boss: BossController
 @export var time_hud: PreparationHUD
+@export var boss_dialog: CanvasItem
+@export var boss_dialog_label: Label
 @export var floating_time_text_scene: PackedScene
 @export_file("*.tscn") var defeat_scene_path: String
 @export_file("*.tscn") var victory_scene_path: String
 
 var _result_requested: bool = false
+var _victory_dialogue_playing: bool = false
 
 func _ready() -> void:
 	if player == null or player.health_component == null or boss == null:
@@ -29,14 +32,62 @@ func _ready() -> void:
 			run_state.mark_boss_started(time_health)
 	if time_hud != null:
 		time_hud.bind_player(player, false)
+	if boss_dialog != null:
+		boss_dialog.visible = false
+	_play_intro_dialogue(time_health)
+
+
+func _play_intro_dialogue(time_health: TimeHealthComponent) -> void:
+	boss.process_mode = Node.PROCESS_MODE_DISABLED
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	if time_health != null:
+		time_health.pause_timer()
+
+	player.show_dialog(
+		"By midnight, there will be a new sheriff in town.",
+		2.8
+	)
+	await get_tree().create_timer(2.8).timeout
+	if player.opening_dialog != null and is_instance_valid(player.opening_dialog):
+		player.opening_dialog.visible = false
+	if not is_instance_valid(boss) or _result_requested:
+		return
+
+	if boss_dialog_label != null:
+		boss_dialog_label.text = "We will see."
+	if boss_dialog != null:
+		boss_dialog.visible = true
+	await get_tree().create_timer(1.8).timeout
+	if boss_dialog != null and is_instance_valid(boss_dialog):
+		boss_dialog.visible = false
+	if not is_instance_valid(boss) or _result_requested:
+		return
+
+	boss.process_mode = Node.PROCESS_MODE_INHERIT
+	player.process_mode = Node.PROCESS_MODE_INHERIT
+	if time_health != null:
+		time_health.resume_timer()
 
 func _on_player_died() -> void:
+	if _victory_dialogue_playing:
+		return
 	_request_result(defeat_scene_path)
 
 func _on_boss_died() -> void:
+	if _result_requested or _victory_dialogue_playing:
+		return
+	_victory_dialogue_playing = true
 	var time_health := player.health_component as TimeHealthComponent
 	if time_health != null:
 		time_health.pause_timer()
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	var dialogue_duration: float = 2.0
+	player.show_dialog("I told you so.", dialogue_duration)
+	await get_tree().create_timer(dialogue_duration).timeout
+	if not is_instance_valid(player):
+		return
+	if player.opening_dialog != null and is_instance_valid(player.opening_dialog):
+		player.opening_dialog.visible = false
 	_request_result(victory_scene_path)
 
 

@@ -15,6 +15,8 @@ extends CanvasLayer
 @export var pause_overlay: Control
 @export var resume_button: Button
 @export var main_menu_button: Button
+@export var music_volume_slider: HSlider
+@export var sfx_volume_slider: HSlider
 @export_file("*.tscn") var main_menu_scene_path: String = "res://Scenes/UI/StartMenu.tscn"
 @export var show_time_feedback: bool = true
 @export var normal_timer_color: Color = Color(0.94, 0.84, 0.63)
@@ -47,6 +49,8 @@ func _ready() -> void:
 		and not main_menu_button.pressed.is_connected(_return_to_main_menu)
 	):
 		main_menu_button.pressed.connect(_return_to_main_menu)
+	_initialize_volume_slider(music_volume_slider, &"Music")
+	_initialize_volume_slider(sfx_volume_slider, &"SFX")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -85,6 +89,34 @@ func _return_to_main_menu() -> void:
 	get_tree().paused = false
 	if not main_menu_scene_path.is_empty():
 		get_tree().change_scene_to_file(main_menu_scene_path)
+
+
+func _initialize_volume_slider(slider: HSlider, bus_name: StringName) -> void:
+	if slider == null:
+		return
+	var bus_index: int = AudioServer.get_bus_index(bus_name)
+	if bus_index < 0:
+		push_warning("Audio bus '%s' is unavailable." % bus_name)
+		return
+	slider.value = db_to_linear(
+		AudioServer.get_bus_volume_db(bus_index)
+	) * 100.0
+	slider.value_changed.connect(
+		func(new_value: float) -> void:
+			_set_bus_volume(bus_name, new_value)
+	)
+
+
+func _set_bus_volume(bus_name: StringName, percent: float) -> void:
+	var bus_index: int = AudioServer.get_bus_index(bus_name)
+	if bus_index < 0:
+		return
+	var normalized: float = clampf(percent / 100.0, 0.0, 1.0)
+	AudioServer.set_bus_mute(bus_index, normalized <= 0.001)
+	AudioServer.set_bus_volume_db(
+		bus_index,
+		linear_to_db(maxf(normalized, 0.001))
+	)
 
 
 func _process(_delta: float) -> void:

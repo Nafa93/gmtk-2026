@@ -32,6 +32,7 @@ enum PhaseState {
 @export var next_boss_scene: PackedScene
 @export var defeat_scene: PackedScene
 @export var start_with_empty_loadout: bool = true
+@export var starting_weapon_scene: PackedScene
 
 @export_group("References")
 @export var player: PlayerController
@@ -56,7 +57,7 @@ func _ready() -> void:
 	call_deferred(&"_initialize_phase")
 
 
-func finish_phase() -> void:
+func finish_phase(show_automatic_dialogue: bool = false) -> void:
 	if _finish_requested or current_state != PhaseState.LOOTING:
 		return
 	if _time_health == null or _time_health.is_dead():
@@ -69,6 +70,19 @@ func finish_phase() -> void:
 	_set_state(PhaseState.FINISHING)
 	phase_finishing.emit()
 	_capture_phase_result()
+
+	if show_automatic_dialogue and player != null:
+		player.process_mode = Node.PROCESS_MODE_DISABLED
+		var dialogue_duration: float = 2.0
+		player.show_dialog("This will have to do.", dialogue_duration)
+		await get_tree().create_timer(dialogue_duration).timeout
+		if not is_instance_valid(player):
+			return
+		if (
+			player.opening_dialog != null
+			and is_instance_valid(player.opening_dialog)
+		):
+			player.opening_dialog.visible = false
 
 	if transition_delay <= 0.0:
 		_begin_transition()
@@ -124,7 +138,13 @@ func _initialize_phase() -> void:
 		push_error("Preparation phase player requires TimeHealthComponent.")
 		return
 
-	if start_with_empty_loadout and player.weapon_component != null:
+	if player.weapon_component != null and starting_weapon_scene != null:
+		player.weapon_component.clear_all_weapons()
+		player.weapon_component.equip_weapon(starting_weapon_scene, 0)
+		var run_state := get_node_or_null("/root/RunLoadout") as RunLoadoutState
+		if run_state != null:
+			run_state.clear_loadout()
+	elif start_with_empty_loadout and player.weapon_component != null:
 		player.weapon_component.clear_all_weapons()
 		var run_state := get_node_or_null("/root/RunLoadout") as RunLoadoutState
 		if run_state != null:
@@ -136,8 +156,19 @@ func _initialize_phase() -> void:
 		run_state.mark_preparation_started(_time_health)
 
 	player_resolved.emit(player)
-	player.show_opening_dialog()
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	var opening_dialog_duration: float = 5.0
+	player.show_opening_dialog(opening_dialog_duration)
 	time_remaining_changed.emit(_time_health.current_time)
+	await get_tree().create_timer(opening_dialog_duration).timeout
+	if not is_instance_valid(player) or current_state != PhaseState.INITIALIZING:
+		return
+	if (
+		player.opening_dialog != null
+		and is_instance_valid(player.opening_dialog)
+	):
+		player.opening_dialog.visible = false
+	player.process_mode = Node.PROCESS_MODE_INHERIT
 	_set_interactions_enabled(true)
 	_set_state(PhaseState.LOOTING)
 	_time_health.resume_timer()
@@ -213,7 +244,7 @@ func _on_time_changed(current_time: float, _maximum_time: float) -> void:
 		and current_state == PhaseState.LOOTING
 		and current_time <= automatic_boss_time
 	):
-		finish_phase()
+		finish_phase(true)
 
 
 func _on_critical_entered() -> void:

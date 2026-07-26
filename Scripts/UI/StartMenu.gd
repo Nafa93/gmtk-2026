@@ -1,7 +1,9 @@
 extends Control
 
 @export_file("*.tscn") var start_scene_path: String
+@export_file("*.tscn") var credits_scene_path: String
 @export var start_button: Button
+@export var credits_button: Button
 @export var quit_button: Button
 
 func _ready() -> void:
@@ -16,6 +18,8 @@ func _resize_buttons() -> void:
 	var responsive_width: float = clampf(size.x * 0.34, 260.0, 420.0)
 	if start_button != null:
 		start_button.custom_minimum_size.x = responsive_width
+	if credits_button != null:
+		credits_button.custom_minimum_size.x = responsive_width
 	if quit_button != null:
 		quit_button.custom_minimum_size.x = responsive_width
 
@@ -36,6 +40,19 @@ func _on_start_pressed() -> void:
 			transition.transition_to_file(start_scene_path)
 		else:
 			get_tree().change_scene_to_file(start_scene_path)
+
+
+func _on_credits_pressed() -> void:
+	if credits_scene_path.is_empty():
+		return
+	var transition := get_node_or_null(
+		"/root/SceneTransition"
+	) as SceneTransitionController
+	if transition != null:
+		transition.transition_to_file(credits_scene_path)
+	else:
+		get_tree().change_scene_to_file(credits_scene_path)
+
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()

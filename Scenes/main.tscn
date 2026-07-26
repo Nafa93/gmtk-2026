@@ -7,8 +7,16 @@
 [ext_resource type="Script" path="res://Scripts/Bosses/BossEncounterController.gd" id="6_encounter"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/PreparationHUD.tscn" id="7_time_hud"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/FloatingTimeText.tscn" id="8_time_text"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/Music/boss_fight.mp3" id="9_music"]
+[ext_resource type="Script" path="res://Scripts/Audio/LoopingMusic.gd" id="10_music_script"]
 
 [node name="Main" type="Node" unique_id=1777710215]
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_music")
+volume_db = -8.0
+bus = &"Music"
+script = ExtResource("10_music_script")
 
 [node name="BossArena" type="Node2D" parent="."]
 position = Vector2(650, 480)
@@ -24,11 +32,13 @@ position = Vector2(900, 480)
 [node name="TimeHUD" parent="." instance=ExtResource("7_time_hud")]
 show_time_feedback = false
 
-[node name="BossEncounterController" type="Node" parent="." node_paths=PackedStringArray("player", "boss", "time_hud")]
+[node name="BossEncounterController" type="Node" parent="." node_paths=PackedStringArray("player", "boss", "time_hud", "boss_dialog", "boss_dialog_label")]
 script = ExtResource("6_encounter")
 player = NodePath("../Player")
 boss = NodePath("../FirstBoss")
 time_hud = NodePath("../TimeHUD")
+boss_dialog = NodePath("../FirstBoss/IntroDialog")
+boss_dialog_label = NodePath("../FirstBoss/IntroDialog/Bubble/Text")
 floating_time_text_scene = ExtResource("8_time_text")
 defeat_scene_path = "res://Scenes/UI/DefeatScreen.tscn"
 victory_scene_path = "res://Scenes/UI/VictoryScreen.tscn"

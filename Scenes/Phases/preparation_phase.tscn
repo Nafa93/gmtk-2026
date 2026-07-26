@@ -13,22 +13,36 @@
 [ext_resource type="PackedScene" path="res://Scenes/Environment/WallTorch.tscn" id="12_torch"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/DefeatScreen.tscn" id="13_defeat"]
 [ext_resource type="PackedScene" path="res://Scenes/Phases/BossEntranceInteractable.tscn" id="14_boss_entrance"]
+[ext_resource type="PackedScene" uid="uid://cs2x82cf7p53p" path="res://Scenes/Weapons/Pistol.tscn" id="15_pistol"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/Music/main_game.mp3" id="16_music"]
+[ext_resource type="Script" path="res://Scripts/Audio/LoopingMusic.gd" id="17_music_script"]
 
 [node name="PreparationPhase" type="Node2D" unique_id=2091941431 node_paths=PackedStringArray("phase_controller", "hud")]
 script = ExtResource("1_phase")
 phase_controller = NodePath("PreparationPhaseController")
 hud = NodePath("PreparationHUD")
 
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_music")
+volume_db = -8.0
+bus = &"Music"
+script = ExtResource("17_music_script")
+
 [node name="PlayerSpawn" type="Marker2D" parent="." unique_id=641918867]
+position = Vector2(407, 80)
+
+[node name="RoomGenerationOrigin" type="Marker2D" parent="."]
 position = Vector2(407, 480)
 
 [node name="Player" parent="." unique_id=1768453675 instance=ExtResource("3_player")]
-position = Vector2(407, 480)
+position = Vector2(407, 80)
 
 [node name="PreparationPhaseController" type="Node" parent="." unique_id=2089194466 node_paths=PackedStringArray("player", "display_tick_timer", "transition_timer", "boss_hold_timer")]
 script = ExtResource("2_controller")
 next_boss_scene = ExtResource("5_boss_scene")
 defeat_scene = ExtResource("13_defeat")
+start_with_empty_loadout = false
+starting_weapon_scene = ExtResource("15_pistol")
 player = NodePath("../Player")
 display_tick_timer = NodePath("DisplayTickTimer")
 transition_timer = NodePath("TransitionTimer")
@@ -46,7 +60,7 @@ one_shot = true
 [node name="InteractionContainer" type="Node2D" parent="." unique_id=1540823158]
 
 [node name="BossEntranceInteractable" parent="InteractionContainer" node_paths=PackedStringArray("phase_controller") instance=ExtResource("14_boss_entrance")]
-position = Vector2(407, 720)
+position = Vector2(407, -75)
 phase_controller = NodePath("../../PreparationPhaseController")
 
 [node name="GeneratedRooms" type="Node2D" parent="." unique_id=516448617]
@@ -63,7 +77,7 @@ output_container = NodePath("../InteractionContainer")
 
 [node name="ProceduralRoomGenerator" type="Node2D" parent="." unique_id=122809109 node_paths=PackedStringArray("generation_origin", "rooms_container", "spawn_points_container", "loot_distributor")]
 script = ExtResource("10_room_generator")
-generation_origin = NodePath("../PlayerSpawn")
+generation_origin = NodePath("../RoomGenerationOrigin")
 torch_scene = ExtResource("12_torch")
 rooms_container = NodePath("../GeneratedRooms")
 spawn_points_container = NodePath("../LootSpawnPoints")

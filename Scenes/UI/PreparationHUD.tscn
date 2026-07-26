@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/PreparationHUD.gd" id="1_hud"]
 [ext_resource type="Script" path="res://Scripts/UI/WeaponSwitchKey.gd" id="2_switch_key"]
 [ext_resource type="Script" path="res://Scripts/UI/WesternKeyPanel.gd" id="3_key_panel"]
 [ext_resource type="Script" path="res://Scripts/UI/WesternButton.gd" id="4_button"]
+[ext_resource type="Script" path="res://Scripts/UI/WesternVolumeSlider.gd" id="5_slider"]
 
 [sub_resource type="StyleBoxFlat" id="WeaponCardStyle"]
 bg_color = Color(0.075, 0.052, 0.036, 0.96)
@@ -23,7 +24,7 @@ content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="KeycapStyle"]
 
-[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "primary_weapon_icon", "secondary_weapon_icon", "boss_prompt_label", "boss_hold_progress", "warning_audio", "pause_button", "pause_overlay", "resume_button", "main_menu_button")]
+[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "primary_weapon_icon", "secondary_weapon_icon", "boss_prompt_label", "boss_hold_progress", "warning_audio", "pause_button", "pause_overlay", "resume_button", "main_menu_button", "music_volume_slider", "sfx_volume_slider")]
 script = ExtResource("1_hud")
 timer_label = NodePath("TopLeft/VBox/TimeRow/TimerLabel")
 feedback_label = NodePath("TopLeft/VBox/TimeRow/FeedbackLabel")
@@ -38,6 +39,8 @@ pause_button = NodePath("PauseButton")
 pause_overlay = NodePath("PauseOverlay")
 resume_button = NodePath("PauseOverlay/Center/VBox/Buttons/Resume")
 main_menu_button = NodePath("PauseOverlay/Center/VBox/Buttons/MainMenu")
+music_volume_slider = NodePath("PauseOverlay/Center/VBox/VolumeControls/Music/Slider")
+sfx_volume_slider = NodePath("PauseOverlay/Center/VBox/VolumeControls/SoundEffects/Slider")
 
 [node name="TopLeft" type="MarginContainer" parent="."]
 offset_right = 360.0
@@ -85,6 +88,7 @@ grow_vertical = 0
 show_percentage = false
 
 [node name="WarningAudio" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
 
 [node name="WeaponSlots" type="MarginContainer" parent="."]
 anchors_preset = 3
@@ -241,7 +245,7 @@ grow_vertical = 2
 [node name="VBox" type="VBoxContainer" parent="PauseOverlay/Center"]
 custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 34
 
 [node name="Title" type="Label" parent="PauseOverlay/Center/VBox"]
 layout_mode = 2
@@ -249,6 +253,44 @@ theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
 theme_override_font_sizes/font_size = 48
 text = "PAUSED"
 horizontal_alignment = 1
+
+[node name="VolumeControls" type="VBoxContainer" parent="PauseOverlay/Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Music" type="VBoxContainer" parent="PauseOverlay/Center/VBox/VolumeControls"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="PauseOverlay/Center/VBox/VolumeControls/Music"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 18
+text = "MUSIC VOLUME"
+horizontal_alignment = 1
+
+[node name="Slider" type="HSlider" parent="PauseOverlay/Center/VBox/VolumeControls/Music"]
+custom_minimum_size = Vector2(440, 46)
+layout_mode = 2
+value = 100.0
+script = ExtResource("5_slider")
+
+[node name="SoundEffects" type="VBoxContainer" parent="PauseOverlay/Center/VBox/VolumeControls"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="PauseOverlay/Center/VBox/VolumeControls/SoundEffects"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 18
+text = "SOUND EFFECTS"
+horizontal_alignment = 1
+
+[node name="Slider" type="HSlider" parent="PauseOverlay/Center/VBox/VolumeControls/SoundEffects"]
+custom_minimum_size = Vector2(440, 46)
+layout_mode = 2
+value = 100.0
+script = ExtResource("5_slider")
 
 [node name="Buttons" type="VBoxContainer" parent="PauseOverlay/Center/VBox"]
 layout_mode = 2
