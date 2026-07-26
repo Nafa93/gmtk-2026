@@ -194,13 +194,20 @@ func _add_saloon_rug(room: Node2D, room_index: int) -> void:
 
 
 func _add_saloon_furniture(room: Node2D, room_index: int) -> void:
-	var half_size: Vector2 = room_size * 0.5
-	var side: float = -1.0 if room_index % 2 == 0 else 1.0
+	# Puzzle rooms already contain large wooden obstacles. Fixed decorative
+	# furniture can overlap those layout-specific barriers, so reserve the full
+	# saloon furniture arrangement for the deliberately open starting room.
+	if room_index != 0:
+		return
 
-	# A long bar counter sits against a side wall, away from the central route.
+	var half_size: Vector2 = room_size * 0.5
+	var side: float = -1.0
+
+	# Keep the bar below the sheriff sign beside the upper entrance. At the old
+	# y-position their collision rectangles overlapped after the room resize.
 	var bar_counter: StaticBody2D = _add_obstacle(
 		room,
-		Vector2(side * (half_size.x - 360.0), -half_size.y + 210.0),
+		Vector2(side * (half_size.x - 360.0), -half_size.y + 290.0),
 		Vector2(460.0, 210.0),
 		furniture_color
 	)
