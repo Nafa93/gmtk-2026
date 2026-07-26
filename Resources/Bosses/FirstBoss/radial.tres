@@ -6,7 +6,7 @@
 script = ExtResource("1_attack")
 damage = 2
 projectile_count = 10
-projectile_speed = 400.0
+projectile_speed = 600.0
 wave_count = 7
 rotation_per_wave_degrees = 18.0
 attack_name = "Radial Pattern"

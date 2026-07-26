@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_attack")
 damage = 2
-projectile_speed = 2742.01
+projectile_speed = 4113.015
 phase_two_interval_multiplier = 0.75
 attack_name = "Aimed Burst"
 selection_weight = 1.4

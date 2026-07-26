@@ -5,6 +5,7 @@ extends CharacterBody2D
 @export var health_component: HealthComponent
 @export var weapon_component: WeaponComponent
 @export var character_sprite: AnimatedSprite2D
+@export var replace_weapon_hint: Label
 @export_group("Damage Response")
 @export_range(0.0, 5000.0, 10.0, "or_greater") var knockback_decay: float = 1500.0
 
@@ -13,6 +14,8 @@ var _knockback_velocity: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
+	if replace_weapon_hint != null:
+		replace_weapon_hint.visible = false
 	var run_loadout := get_node_or_null("/root/RunLoadout") as RunLoadoutState
 	if run_loadout != null and run_loadout.has_loadout():
 		run_loadout.apply_to(weapon_component)
@@ -72,10 +75,27 @@ func register_interactable(interactable: Node2D) -> void:
 	if interactable == null or interactable in _nearby_interactables:
 		return
 	_nearby_interactables.append(interactable)
+	_refresh_replace_weapon_hint()
 
 
 func unregister_interactable(interactable: Node2D) -> void:
 	_nearby_interactables.erase(interactable)
+	_refresh_replace_weapon_hint()
+
+
+func _refresh_replace_weapon_hint() -> void:
+	if replace_weapon_hint == null:
+		return
+	var should_show: bool = false
+	for interactable: Node2D in _nearby_interactables:
+		if (
+			interactable != null
+			and is_instance_valid(interactable)
+			and interactable.is_in_group(&"weapon_pickup")
+		):
+			should_show = true
+			break
+	replace_weapon_hint.visible = should_show
 
 
 func _interact_with_nearest() -> void:

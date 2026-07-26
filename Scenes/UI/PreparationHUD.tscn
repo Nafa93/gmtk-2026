@@ -1,13 +1,34 @@
-[gd_scene format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/PreparationHUD.gd" id="1_hud"]
+[ext_resource type="Script" path="res://Scripts/UI/WeaponSwitchKey.gd" id="2_switch_key"]
 
-[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "warning_label", "boss_prompt_label", "boss_hold_progress", "warning_audio")]
+[sub_resource type="StyleBoxFlat" id="WeaponCardStyle"]
+bg_color = Color(0.075, 0.052, 0.036, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.52, 0.36, 0.19, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="KeycapStyle"]
+
+[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "primary_weapon_icon", "secondary_weapon_icon", "warning_label", "boss_prompt_label", "boss_hold_progress", "warning_audio")]
 script = ExtResource("1_hud")
 timer_label = NodePath("TopLeft/VBox/TimeRow/TimerLabel")
 feedback_label = NodePath("TopLeft/VBox/TimeRow/FeedbackLabel")
-primary_weapon_label = NodePath("TopLeft/VBox/PrimaryWeaponLabel")
-secondary_weapon_label = NodePath("TopLeft/VBox/SecondaryWeaponLabel")
+primary_weapon_label = NodePath("WeaponSlots/Row/PrimaryCard/VBox/Content/WeaponName")
+secondary_weapon_label = NodePath("WeaponSlots/Row/SecondaryCard/VBox/Content/WeaponName")
+primary_weapon_icon = NodePath("WeaponSlots/Row/PrimaryCard/VBox/Content/Icon")
+secondary_weapon_icon = NodePath("WeaponSlots/Row/SecondaryCard/VBox/Content/Icon")
 warning_label = NodePath("WarningLabel")
 boss_prompt_label = NodePath("BossPrompt")
 boss_hold_progress = NodePath("BossHoldProgress")
@@ -17,7 +38,7 @@ warning_audio = NodePath("WarningAudio")
 offset_right = 360.0
 offset_bottom = 200.0
 theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 20
+theme_override_constants/margin_top = 58
 
 [node name="VBox" type="VBoxContainer" parent="TopLeft"]
 layout_mode = 2
@@ -35,23 +56,19 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "+2.0s"
 
-[node name="PrimaryWeaponLabel" type="Label" parent="TopLeft/VBox"]
-layout_mode = 2
-text = "ACTIVE: EMPTY"
-
-[node name="SecondaryWeaponLabel" type="Label" parent="TopLeft/VBox"]
-layout_mode = 2
-text = "STORED: EMPTY"
-
 [node name="WarningLabel" type="Label" parent="."]
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 64.0
+offset_top = 42.0
+offset_bottom = 118.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 0.2, 0.1, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.66, 0.29, 0.18, 1)
+theme_override_colors/font_outline_color = Color(0.025, 0.018, 0.012, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
 text = "CRITICAL TIME"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="BossPrompt" type="Label" parent="."]
 anchors_preset = 12
@@ -77,3 +94,114 @@ grow_vertical = 0
 show_percentage = false
 
 [node name="WarningAudio" type="AudioStreamPlayer" parent="."]
+
+[node name="WeaponSlots" type="MarginContainer" parent="."]
+anchors_preset = 3
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -132.0
+offset_right = 370.0
+offset_bottom = -12.0
+grow_vertical = 0
+theme_override_constants/margin_left = 16
+
+[node name="Row" type="HBoxContainer" parent="WeaponSlots"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="PrimaryCard" type="PanelContainer" parent="WeaponSlots/Row"]
+custom_minimum_size = Vector2(120, 112)
+layout_mode = 2
+theme_override_styles/panel = SubResource("WeaponCardStyle")
+
+[node name="VBox" type="VBoxContainer" parent="WeaponSlots/Row/PrimaryCard"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Role" type="Label" parent="WeaponSlots/Row/PrimaryCard/VBox"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.55, 0.36, 1)
+theme_override_font_sizes/font_size = 8
+text = "PRIMARY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Content" type="VBoxContainer" parent="WeaponSlots/Row/PrimaryCard/VBox"]
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Icon" type="TextureRect" parent="WeaponSlots/Row/PrimaryCard/VBox/Content"]
+custom_minimum_size = Vector2(48, 42)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WeaponName" type="Label" parent="WeaponSlots/Row/PrimaryCard/VBox/Content"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 10
+text = "EMPTY"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="SwitchKey" type="PanelContainer" parent="WeaponSlots/Row" node_paths=PackedStringArray("key_label")]
+custom_minimum_size = Vector2(46, 50)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("KeycapStyle")
+script = ExtResource("2_switch_key")
+key_label = NodePath("Label")
+
+[node name="Label" type="Label" parent="WeaponSlots/Row/SwitchKey"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.105, 0.075, 0.045, 1)
+theme_override_font_sizes/font_size = 12
+text = "Q"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SecondaryCard" type="PanelContainer" parent="WeaponSlots/Row"]
+custom_minimum_size = Vector2(120, 112)
+layout_mode = 2
+theme_override_styles/panel = SubResource("WeaponCardStyle")
+
+[node name="VBox" type="VBoxContainer" parent="WeaponSlots/Row/SecondaryCard"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Role" type="Label" parent="WeaponSlots/Row/SecondaryCard/VBox"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.55, 0.36, 1)
+theme_override_font_sizes/font_size = 8
+text = "SECONDARY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Content" type="VBoxContainer" parent="WeaponSlots/Row/SecondaryCard/VBox"]
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Icon" type="TextureRect" parent="WeaponSlots/Row/SecondaryCard/VBox/Content"]
+custom_minimum_size = Vector2(48, 42)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WeaponName" type="Label" parent="WeaponSlots/Row/SecondaryCard/VBox/Content"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "EMPTY"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

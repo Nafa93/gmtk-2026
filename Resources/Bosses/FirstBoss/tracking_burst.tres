@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_attack")
 burst_count = 10
-projectile_speed = 1126.01
+projectile_speed = 1689.015
 damage = 2
 retarget_each_shot = true
 phase_two_interval_multiplier = 0.75

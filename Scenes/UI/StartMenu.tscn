@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/StartMenu.gd" id="1"]
+[ext_resource type="Script" path="res://Scripts/UI/ResponsiveLabel.gd" id="2_responsive"]
+[ext_resource type="Script" path="res://Scripts/UI/WesternButton.gd" id="3_button"]
 
-[node name="StartMenu" type="Control" node_paths=PackedStringArray("start_button")]
+[node name="StartMenu" type="Control" node_paths=PackedStringArray("start_button", "quit_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,6 +14,7 @@ grow_vertical = 2
 script = ExtResource("1")
 start_scene_path = "res://Scenes/Phases/preparation_phase.tscn"
 start_button = NodePath("Center/VBox/Start")
+quit_button = NodePath("Center/VBox/Quit")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -20,7 +23,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.01, 0.012, 0.02, 1)
+color = Color(0.045, 0.032, 0.022, 1)
 mouse_filter = 2
 
 [node name="Center" type="CenterContainer" parent="."]
@@ -32,34 +35,48 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="Center"]
-custom_minimum_size = Vector2(480, 0)
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 theme_override_constants/separation = 28
 
 [node name="Title" type="Label" parent="Center/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.72, 0.22, 1)
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
 theme_override_font_sizes/font_size = 72
-text = "GMTK 2026"
+text = "MINUTE TO MIDNIGHT"
 horizontal_alignment = 1
+script = ExtResource("2_responsive")
+minimum_font_size = 24
+maximum_font_size = 72
+maximum_viewport_width_ratio = 0.88
 
 [node name="Subtitle" type="Label" parent="Center/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Find your weapons. Defeat the guardian."
+text = "Find your weapons. Defeat the sheriff."
 horizontal_alignment = 1
+script = ExtResource("2_responsive")
+minimum_font_size = 14
+maximum_font_size = 24
+maximum_viewport_width_ratio = 0.82
 
 [node name="Start" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(360, 64)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 text = "START RUN"
+script = ExtResource("3_button")
+display_font_size = 28
 
 [node name="Quit" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(360, 56)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 24
 text = "QUIT"
+script = ExtResource("3_button")
+display_font_size = 24
 
 [connection signal="pressed" from="Center/VBox/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Center/VBox/Quit" to="." method="_on_quit_pressed"]

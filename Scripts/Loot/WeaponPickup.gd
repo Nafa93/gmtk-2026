@@ -21,6 +21,7 @@ var weapon_preview: Weapon
 
 var _phase_controller: PreparationPhaseController
 var _players_in_range: Array[PlayerController] = []
+var _replace_highlighted: bool = false
 
 
 func _ready() -> void:
@@ -34,6 +35,37 @@ func _ready() -> void:
 		body_exited.connect(_on_body_exited)
 	if not tree_exiting.is_connected(_on_tree_exiting):
 		tree_exiting.connect(_on_tree_exiting)
+	set_process(true)
+
+
+func _process(_delta: float) -> void:
+	queue_redraw()
+	for player: PlayerController in _players_in_range.duplicate():
+		_refresh_player_interaction(player)
+
+
+func _draw() -> void:
+	var pulse: float = (sin(Time.get_ticks_msec() / 260.0) + 1.0) * 0.5
+	var glow_color := Color(0.84, 0.64, 0.28, 0.12 + pulse * 0.1)
+	var ring_color := Color(0.84, 0.64, 0.28, 0.65 + pulse * 0.25)
+	var highlight_center: Vector2 = _get_preview_center()
+	var radius: float = 58.0
+	if _replace_highlighted:
+		glow_color = Color(0.96, 0.82, 0.5, 0.22 + pulse * 0.16)
+		ring_color = Color(0.96, 0.82, 0.5, 0.85)
+		radius = 66.0
+	draw_circle(highlight_center, radius, glow_color)
+	draw_arc(highlight_center, radius, 0.0, TAU, 48, ring_color, 5.0)
+
+
+func _get_preview_center() -> Vector2:
+	if (
+		weapon_preview == null
+		or not is_instance_valid(weapon_preview)
+		or weapon_preview.weapon_sprite == null
+	):
+		return Vector2.ZERO
+	return to_local(weapon_preview.weapon_sprite.global_position)
 
 
 func configure(selected_weapon_scene: PackedScene) -> void:
@@ -86,6 +118,7 @@ func _build_preview() -> void:
 	weapon_preview.position = Vector2.ZERO
 	weapon_preview.rotation = 0.0
 	weapon_preview.activate()
+	_align_collision_to_preview()
 
 	if name_label != null:
 		if weapon_preview.data != null:
@@ -100,14 +133,30 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 
 	_players_in_range.append(player)
-	if not _can_collect() or player.weapon_component == null:
-		return
+	_refresh_player_interaction(player)
 
+
+func _refresh_player_interaction(player: PlayerController) -> void:
+	if (
+		player == null
+		or not is_instance_valid(player)
+		or not _can_collect()
+		or player.weapon_component == null
+	):
+		return
 	var empty_slot: int = player.weapon_component.get_first_empty_slot()
 	if empty_slot >= 0:
 		_collect_into_empty_slot(player, player.weapon_component, empty_slot)
 	else:
+		_replace_highlighted = true
 		player.register_interactable(self)
+
+
+func _align_collision_to_preview() -> void:
+	var collision_shape := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if collision_shape == null:
+		return
+	collision_shape.position = _get_preview_center()
 
 
 func _on_body_exited(body: Node2D) -> void:
@@ -116,6 +165,7 @@ func _on_body_exited(body: Node2D) -> void:
 		return
 	_players_in_range.erase(player)
 	player.unregister_interactable(self)
+	_replace_highlighted = false
 
 
 func _on_tree_exiting() -> void:

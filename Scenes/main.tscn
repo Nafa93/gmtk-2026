@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/Environment/WallTorch.tscn" id="5_torch"]
 [ext_resource type="Script" path="res://Scripts/Bosses/BossEncounterController.gd" id="6_encounter"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/PreparationHUD.tscn" id="7_time_hud"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/FloatingTimeText.tscn" id="8_time_text"]
 
 [node name="Main" type="Node" unique_id=1777710215]
 
@@ -21,11 +22,13 @@ position = Vector2(407, 480)
 position = Vector2(900, 480)
 
 [node name="TimeHUD" parent="." instance=ExtResource("7_time_hud")]
+show_time_feedback = false
 
 [node name="BossEncounterController" type="Node" parent="." node_paths=PackedStringArray("player", "boss", "time_hud")]
 script = ExtResource("6_encounter")
 player = NodePath("../Player")
 boss = NodePath("../FirstBoss")
 time_hud = NodePath("../TimeHUD")
+floating_time_text_scene = ExtResource("8_time_text")
 defeat_scene_path = "res://Scenes/UI/DefeatScreen.tscn"
 victory_scene_path = "res://Scenes/UI/VictoryScreen.tscn"

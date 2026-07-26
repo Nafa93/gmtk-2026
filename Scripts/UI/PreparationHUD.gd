@@ -5,12 +5,15 @@ extends CanvasLayer
 @export var feedback_label: Label
 @export var primary_weapon_label: Label
 @export var secondary_weapon_label: Label
+@export var primary_weapon_icon: TextureRect
+@export var secondary_weapon_icon: TextureRect
 @export var warning_label: Label
 @export var boss_prompt_label: Label
 @export var boss_hold_progress: ProgressBar
 @export var warning_audio: AudioStreamPlayer
-@export var normal_timer_color: Color = Color.WHITE
-@export var warning_timer_color: Color = Color(1.0, 0.2, 0.12)
+@export var show_time_feedback: bool = true
+@export var normal_timer_color: Color = Color(0.94, 0.84, 0.63)
+@export var warning_timer_color: Color = Color(0.66, 0.29, 0.18)
 @export_range(0.0, 1.0, 0.05) var pulse_intensity: float = 0.25
 @export_range(0.1, 10.0, 0.1, "or_greater") var pulse_frequency: float = 3.0
 
@@ -94,13 +97,15 @@ func _on_time_changed(current_time: float, _maximum_time: float) -> void:
 
 
 func _on_time_lost(amount: float, source: StringName) -> void:
-	if source == &"drain":
+	if not show_time_feedback or source == &"drain":
 		return
 	_show_feedback("-%.1fs" % amount, warning_timer_color)
 
 
 func _on_time_recovered(amount: float, _source: StringName) -> void:
-	_show_feedback("+%.1fs" % amount, Color(0.25, 1.0, 0.45))
+	if not show_time_feedback:
+		return
+	_show_feedback("+%.1fs" % amount, Color(0.84, 0.64, 0.28))
 
 
 func _on_time_critical() -> void:
@@ -171,15 +176,22 @@ func _on_loadout_changed(_active: Weapon, _secondary: Weapon) -> void:
 
 
 func _refresh_weapon_labels() -> void:
+	var primary_weapon: Weapon = (
+		_weapon_component.get_active_weapon() if _weapon_component != null else null
+	)
+	var secondary_weapon: Weapon = (
+		_weapon_component.get_secondary_weapon()
+		if _weapon_component != null
+		else null
+	)
 	if primary_weapon_label != null:
-		primary_weapon_label.text = "ACTIVE: %s" % _get_weapon_name(
-			_weapon_component.get_active_weapon() if _weapon_component != null else null
-		)
+		primary_weapon_label.text = _get_weapon_name(primary_weapon)
 	if secondary_weapon_label != null:
-		secondary_weapon_label.text = "STORED: %s" % _get_weapon_name(
-			_weapon_component.get_secondary_weapon()
-			if _weapon_component != null else null
-		)
+		secondary_weapon_label.text = _get_weapon_name(secondary_weapon)
+	if primary_weapon_icon != null:
+		primary_weapon_icon.texture = _get_weapon_texture(primary_weapon)
+	if secondary_weapon_icon != null:
+		secondary_weapon_icon.texture = _get_weapon_texture(secondary_weapon)
 
 
 func _get_weapon_name(weapon: Weapon) -> String:
@@ -188,6 +200,16 @@ func _get_weapon_name(weapon: Weapon) -> String:
 	if weapon.data == null or weapon.data.weapon_name.is_empty():
 		return weapon.name
 	return weapon.data.weapon_name
+
+
+func _get_weapon_texture(weapon: Weapon) -> Texture2D:
+	if (
+		weapon == null
+		or not is_instance_valid(weapon)
+		or weapon.weapon_sprite == null
+	):
+		return null
+	return weapon.weapon_sprite.texture
 
 
 func _format_time(value: float) -> String:

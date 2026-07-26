@@ -3,12 +3,12 @@
 [ext_resource type="Script" path="res://Scripts/UI/FloatingHealthBar.gd" id="1_health_bar"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
-bg_color = Color(0.035, 0.04, 0.055, 0.95)
+bg_color = Color(0.075, 0.052, 0.036, 0.95)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.01, 0.01, 0.015, 1)
+border_color = Color(0.025, 0.018, 0.012, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5

@@ -1,7 +1,7 @@
 class_name BossSummonAttack
 extends BossAttack
 
-@export_range(1, 20, 1, "or_greater") var minion_count: int = 2
+@export_range(1, 20, 1, "or_greater") var bomb_count: int = 2
 
 
 func begin_telegraph(boss: BossController, _phase: int) -> void:

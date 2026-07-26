@@ -27,7 +27,8 @@ enum PhaseState {
 @export var allow_early_boss_start: bool = true
 @export_range(0.1, 10.0, 0.1, "or_greater") var boss_start_hold_duration: float = 1.0
 @export_range(0.0, 120.0, 0.5, "or_greater") var minimum_boss_entry_time: float = 5.0
-@export_range(0.0, 30.0, 0.1, "or_greater") var transition_delay: float = 1.0
+@export_range(0.0, 120.0, 0.5, "or_greater") var automatic_boss_time: float = 15.0
+@export_range(0.0, 30.0, 0.1, "or_greater") var transition_delay: float = 0.0
 @export var next_boss_scene: PackedScene
 @export var defeat_scene: PackedScene
 @export var start_with_empty_loadout: bool = true
@@ -206,6 +207,12 @@ func _on_boss_hold_completed() -> void:
 
 func _on_time_changed(current_time: float, _maximum_time: float) -> void:
 	time_remaining_changed.emit(current_time)
+	if (
+		not _finish_requested
+		and current_state == PhaseState.LOOTING
+		and current_time <= automatic_boss_time
+	):
+		finish_phase()
 
 
 func _on_critical_entered() -> void:
@@ -246,6 +253,18 @@ func _begin_transition() -> void:
 	transition_started.emit(next_boss_scene)
 	_set_state(PhaseState.COMPLETED)
 	phase_completed.emit()
+	var scene_transition := (
+		get_node_or_null("/root/SceneTransition") as SceneTransitionController
+	)
+	if scene_transition != null:
+		var screen_center: Vector2 = Vector2(0.5, 0.5)
+		if player != null:
+			var viewport_size: Vector2 = player.get_viewport_rect().size
+			screen_center = (
+				player.get_global_transform_with_canvas().origin / viewport_size
+			)
+		scene_transition.transition_to_packed(next_boss_scene, screen_center)
+		return
 	var error: Error = get_tree().change_scene_to_packed(next_boss_scene)
 	if error != OK:
 		push_error("Boss scene transition failed: %s." % error_string(error))

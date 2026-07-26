@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_attack")
-minion_count = 2
-attack_name = "Summon Minions"
+bomb_count = 2
+attack_name = "Throw Bombs"
 selection_weight = 0.7
 cooldown = 7.0
 minimum_distance = 0.0

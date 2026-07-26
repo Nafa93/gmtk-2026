@@ -12,7 +12,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
 radius = 32.0
 
-[node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component", "weapon_component", "character_sprite") groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=782332188 node_paths=PackedStringArray("movement_component", "health_component", "weapon_component", "character_sprite", "replace_weapon_hint") groups=["player"]]
 collision_layer = 2
 collision_mask = 9
 script = ExtResource("1_cqrjx")
@@ -20,6 +20,7 @@ movement_component = NodePath("MovementComponent")
 health_component = NodePath("HealthComponent")
 weapon_component = NodePath("WeaponComponent")
 character_sprite = NodePath("AnimatedSprite2D")
+replace_weapon_hint = NodePath("ReplaceWeaponHint")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1899952837]
 texture_filter = 1
@@ -54,3 +55,16 @@ position_smoothing_speed = 6.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1155133397]
 shape = SubResource("CircleShape2D_cqrjx")
+
+[node name="ReplaceWeaponHint" type="Label" parent="."]
+z_index = 20
+offset_left = -38.0
+offset_top = -112.0
+offset_right = 38.0
+offset_bottom = -48.0
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_colors/font_outline_color = Color(0.025, 0.018, 0.012, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 28
+text = "E"
+horizontal_alignment = 1

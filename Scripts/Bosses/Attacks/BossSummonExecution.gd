@@ -8,5 +8,5 @@ func _init(boss: BossController, attack: BossSummonAttack) -> void:
 		return
 	boss.velocity = Vector2.ZERO
 	boss.play_attack_effects()
-	boss.spawn_boss_minions(attack.minion_count)
+	boss.throw_boss_bombs(attack.bomb_count)
 	finished = true
