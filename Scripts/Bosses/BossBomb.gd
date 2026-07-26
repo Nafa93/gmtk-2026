@@ -12,6 +12,10 @@ signal disarmed(time_reward: float)
 var _fuse_remaining: float
 var _resolved: bool = false
 
+@onready var bomb_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var explosion_sprite: AnimatedSprite2D = $ExplosionSprite
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
+
 
 func _ready() -> void:
 	_fuse_remaining = fuse_duration
@@ -32,8 +36,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	var ratio: float = clampf(_fuse_remaining / maxf(fuse_duration, 0.01), 0.0, 1.0)
-	draw_circle(Vector2.ZERO, 22.0, Color(0.12, 0.12, 0.16))
-	draw_arc(Vector2.ZERO, 29.0, -PI / 2.0, -PI / 2.0 + TAU * ratio, 32, Color(1.0, 0.25, 0.08), 6.0)
+	draw_arc(Vector2.ZERO, 85.0, -PI / 2.0, -PI / 2.0 + TAU * ratio, 48, Color(1.0, 0.25, 0.08), 15.0)
 
 
 func _on_destroyed() -> void:
@@ -56,9 +59,18 @@ func _explode() -> void:
 	if _resolved:
 		return
 	_resolved = true
+	queue_redraw()
+	if collision_shape != null:
+		collision_shape.set_deferred(&"disabled", true)
+	if bomb_sprite != null:
+		bomb_sprite.visible = false
 	var player := get_tree().get_first_node_in_group(&"player") as PlayerController
 	if player != null and global_position.distance_to(player.global_position) <= explosion_radius:
 		var time_health := player.health_component as TimeHealthComponent
 		if time_health != null:
 			time_health.take_time_damage(explosion_time_damage, &"boss_bomb")
+	if explosion_sprite != null:
+		explosion_sprite.visible = true
+		explosion_sprite.play(&"explode")
+		await explosion_sprite.animation_finished
 	queue_free()

@@ -1,10 +1,105 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Bosses/BossBomb.gd" id="1"]
 [ext_resource type="PackedScene" path="res://Scenes/Components/health_component.tscn" id="2"]
+[ext_resource type="Texture2D" path="res://Assets/bomb-Sheet.png" id="3_bomb"]
+[ext_resource type="Texture2D" path="res://Assets/explosion-6.png" id="4_explosion"]
 
 [sub_resource type="CircleShape2D" id="1"]
-radius = 25.0
+radius = 70.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bomb_0"]
+atlas = ExtResource("3_bomb")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bomb_1"]
+atlas = ExtResource("3_bomb")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bomb_2"]
+atlas = ExtResource("3_bomb")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bomb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bomb_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bomb_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bomb_2")
+}],
+"loop": true,
+"name": &"fuse",
+"speed": 4.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_explosion_0"]
+atlas = ExtResource("4_explosion")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_explosion_1"]
+atlas = ExtResource("4_explosion")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_explosion_2"]
+atlas = ExtResource("4_explosion")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_explosion_3"]
+atlas = ExtResource("4_explosion")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_explosion_4"]
+atlas = ExtResource("4_explosion")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_explosion_5"]
+atlas = ExtResource("4_explosion")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_explosion_6"]
+atlas = ExtResource("4_explosion")
+region = Rect2(288, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_explosion_7"]
+atlas = ExtResource("4_explosion")
+region = Rect2(336, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_explosion"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_explosion_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_explosion_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_explosion_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_explosion_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_explosion_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_explosion_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_explosion_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_explosion_7")
+}],
+"loop": false,
+"name": &"explode",
+"speed": 14.0
+}]
 
 [node name="BossBomb" type="Area2D" node_paths=PackedStringArray("health_component") groups=["enemy"]]
 collision_layer = 8
@@ -14,6 +109,20 @@ health_component = NodePath("HealthComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_bomb")
+animation = &"fuse"
+autoplay = "fuse"
+
+[node name="ExplosionSprite" type="AnimatedSprite2D" parent="."]
+visible = false
+texture_filter = 1
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_explosion")
+animation = &"explode"
 
 [node name="HealthComponent" parent="." instance=ExtResource("2")]
 max_health = 3

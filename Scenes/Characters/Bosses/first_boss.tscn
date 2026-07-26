@@ -169,6 +169,11 @@ milestone_time_reward = 5.0
 [node name="BombSpawner" type="Node" parent="BossComponents"]
 script = ExtResource("24_bomb_spawner")
 bomb_scene = ExtResource("23_bomb")
+target_scatter = 180.0
+periodic_interval = 5.0
+initial_delay = 2.5
+periodic_bomb_count = 1
+throw_duration = 0.45
 
 [node name="StateMachine" type="Node" parent="." unique_id=533892552 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("14_machine")
