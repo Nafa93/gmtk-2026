@@ -188,10 +188,8 @@ func _refresh_weapon_labels() -> void:
 		primary_weapon_label.text = _get_weapon_name(primary_weapon)
 	if secondary_weapon_label != null:
 		secondary_weapon_label.text = _get_weapon_name(secondary_weapon)
-	if primary_weapon_icon != null:
-		primary_weapon_icon.texture = _get_weapon_texture(primary_weapon)
-	if secondary_weapon_icon != null:
-		secondary_weapon_icon.texture = _get_weapon_texture(secondary_weapon)
+	_update_weapon_icon(primary_weapon_icon, primary_weapon)
+	_update_weapon_icon(secondary_weapon_icon, secondary_weapon)
 
 
 func _get_weapon_name(weapon: Weapon) -> String:
@@ -210,6 +208,20 @@ func _get_weapon_texture(weapon: Weapon) -> Texture2D:
 	):
 		return null
 	return weapon.weapon_sprite.texture
+
+
+func _update_weapon_icon(icon: TextureRect, weapon: Weapon) -> void:
+	if icon == null:
+		return
+	icon.texture = _get_weapon_texture(weapon)
+	icon.pivot_offset = icon.size * 0.5
+	var icon_scale: float = 1.0
+	var weapon_name: String = _get_weapon_name(weapon).to_lower()
+	if weapon_name == "rifle":
+		icon_scale = 1.65
+	elif weapon_name == "shotgun":
+		icon_scale = 1.5
+	icon.scale = Vector2.ONE * icon_scale
 
 
 func _format_time(value: float) -> String:
