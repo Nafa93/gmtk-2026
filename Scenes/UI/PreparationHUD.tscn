@@ -2,43 +2,78 @@
 
 [ext_resource type="Script" path="res://Scripts/UI/PreparationHUD.gd" id="1_hud"]
 
-[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "primary_weapon_label", "secondary_weapon_label", "warning_label")]
+[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "warning_label", "boss_prompt_label", "boss_hold_progress", "warning_audio")]
 script = ExtResource("1_hud")
-timer_label = NodePath("MarginContainer/VBoxContainer/TimerLabel")
-primary_weapon_label = NodePath("MarginContainer/VBoxContainer/PrimaryWeaponLabel")
-secondary_weapon_label = NodePath("MarginContainer/VBoxContainer/SecondaryWeaponLabel")
+timer_label = NodePath("TopLeft/VBox/TimeRow/TimerLabel")
+feedback_label = NodePath("TopLeft/VBox/TimeRow/FeedbackLabel")
+primary_weapon_label = NodePath("TopLeft/VBox/PrimaryWeaponLabel")
+secondary_weapon_label = NodePath("TopLeft/VBox/SecondaryWeaponLabel")
 warning_label = NodePath("WarningLabel")
+boss_prompt_label = NodePath("BossPrompt")
+boss_hold_progress = NodePath("BossHoldProgress")
+warning_audio = NodePath("WarningAudio")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-offset_right = 280.0
-offset_bottom = 140.0
-theme_override_constants/margin_left = 20
+[node name="TopLeft" type="MarginContainer" parent="."]
+offset_right = 360.0
+offset_bottom = 200.0
+theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="TopLeft"]
 layout_mode = 2
 
-[node name="TimerLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="TimeRow" type="HBoxContainer" parent="TopLeft/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "01:00"
 
-[node name="PrimaryWeaponLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="TimerLabel" type="Label" parent="TopLeft/VBox/TimeRow"]
 layout_mode = 2
-text = "Activa: Vacía"
+theme_override_font_sizes/font_size = 30
+text = "TIME  01:00"
 
-[node name="SecondaryWeaponLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="FeedbackLabel" type="Label" parent="TopLeft/VBox/TimeRow"]
 layout_mode = 2
-text = "Secundaria: Vacía"
+theme_override_font_sizes/font_size = 18
+text = "+2.0s"
+
+[node name="PrimaryWeaponLabel" type="Label" parent="TopLeft/VBox"]
+layout_mode = 2
+text = "ACTIVE: EMPTY"
+
+[node name="SecondaryWeaponLabel" type="Label" parent="TopLeft/VBox"]
+layout_mode = 2
+text = "STORED: EMPTY"
 
 [node name="WarningLabel" type="Label" parent="."]
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 70.0
+offset_bottom = 64.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.2, 0.1, 1)
 theme_override_font_sizes/font_size = 28
-text = "¡QUEDA POCO TIEMPO!"
+text = "CRITICAL TIME"
 horizontal_alignment = 1
+
+[node name="BossPrompt" type="Label" parent="."]
+anchors_preset = 12
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -76.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Hold [E] to face the boss"
+horizontal_alignment = 1
+
+[node name="BossHoldProgress" type="ProgressBar" parent="."]
+anchors_preset = 12
+anchor_left = 0.35
+anchor_top = 1.0
+anchor_right = 0.65
+anchor_bottom = 1.0
+offset_top = -38.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+show_percentage = false
+
+[node name="WarningAudio" type="AudioStreamPlayer" parent="."]

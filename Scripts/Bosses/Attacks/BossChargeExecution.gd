@@ -9,6 +9,7 @@ var _speed: float
 var _maximum_duration: float
 var _maximum_distance: float
 var _contact_damage: int
+var _knockback_strength: float = 700.0
 var _elapsed: float = 0.0
 var _distance_travelled: float = 0.0
 var _last_position: Vector2
@@ -86,7 +87,18 @@ func _damage_target_once(target: Node) -> void:
 	_damaged_targets[target_id] = true
 	var health: HealthComponent = _boss.find_health_component(target)
 	if health != null:
-		health.take_damage(_contact_damage)
+		if health is TimeHealthComponent:
+			var applied_damage: float = (
+				health as TimeHealthComponent
+			).take_time_damage(
+				float(_contact_damage),
+				&"boss_charge"
+			)
+			var player := target as PlayerController
+			if applied_damage > 0.0 and player != null:
+				player.apply_knockback(_boss.global_position, _knockback_strength)
+		else:
+			health.take_damage(_contact_damage)
 
 
 func _finish_charge() -> void:

@@ -18,6 +18,7 @@ signal state_changed(new_state: StringName)
 @export var projectile_emitter: BossProjectileEmitter
 @export var telegraph_presenter: BossTelegraphPresenter
 @export var phase_controller: BossPhaseController
+@export var minion_spawner: BossMinionSpawner
 
 @export_group("Movement")
 @export_range(0.0, 10000.0, 1.0, "or_greater") var movement_speed: float = 115.0
@@ -89,6 +90,12 @@ func spawn_boss_projectile(
 	if _is_dead:
 		return false
 	return projectile_emitter.fire(self, direction, speed, damage)
+
+
+func spawn_boss_minions(count: int) -> int:
+	if _is_dead or minion_spawner == null:
+		return 0
+	return minion_spawner.spawn_minions(count)
 
 
 func lock_attack_direction_to_target() -> void:

@@ -10,7 +10,7 @@ func _ready() -> void:
 func _on_retry_pressed() -> void:
 	var run_loadout := get_node_or_null("/root/RunLoadout") as RunLoadoutState
 	if run_loadout != null:
-		run_loadout.clear_loadout()
+		run_loadout.reset_run()
 	if not menu_scene_path.is_empty():
 		get_tree().change_scene_to_file(menu_scene_path)
 

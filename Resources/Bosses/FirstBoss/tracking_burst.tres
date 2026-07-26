@@ -6,6 +6,7 @@
 script = ExtResource("1_attack")
 burst_count = 10
 projectile_speed = 1126.01
+damage = 2
 retarget_each_shot = true
 phase_two_interval_multiplier = 0.75
 attack_name = "Tracking Burst"

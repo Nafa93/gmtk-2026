@@ -5,8 +5,11 @@ extends CharacterBody2D
 @export var health_component: HealthComponent
 @export var weapon_component: WeaponComponent
 @export var character_sprite: AnimatedSprite2D
+@export_group("Damage Response")
+@export_range(0.0, 5000.0, 10.0, "or_greater") var knockback_decay: float = 1500.0
 
 var _nearby_interactables: Array[Node2D] = []
+var _knockback_velocity: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
@@ -15,8 +18,12 @@ func _ready() -> void:
 		run_loadout.apply_to(weapon_component)
 
 
-func _physics_process(_delta: float) -> void:
-	velocity = movement_component.get_velocity()
+func _physics_process(delta: float) -> void:
+	_knockback_velocity = _knockback_velocity.move_toward(
+		Vector2.ZERO,
+		knockback_decay * delta
+	)
+	velocity = movement_component.get_velocity() + _knockback_velocity
 
 	var aim_position: Vector2 = get_global_mouse_position()
 	_update_character_visual(aim_position)
@@ -36,6 +43,15 @@ func _physics_process(_delta: float) -> void:
 		_interact_with_nearest()
 
 	move_and_slide()
+
+
+func apply_knockback(source_position: Vector2, strength: float) -> void:
+	if strength <= 0.0:
+		return
+	var knockback_direction: Vector2 = source_position.direction_to(global_position)
+	if knockback_direction.is_zero_approx():
+		knockback_direction = Vector2.RIGHT
+	_knockback_velocity = knockback_direction * strength
 
 
 func _update_character_visual(aim_position: Vector2) -> void:

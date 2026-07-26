@@ -5,6 +5,8 @@ extends Node
 @export var darkness_color: Color = Color(0.015, 0.02, 0.035, 1.0)
 @export_range(100.0, 1200.0, 10.0, "or_greater") var vision_radius: float = 360.0
 @export_range(0.1, 4.0, 0.05, "or_greater") var light_energy: float = 1.15
+@export_group("Debug")
+@export var debug_reveal_map: bool = false
 
 var _canvas_modulate: CanvasModulate
 var _vision_light: PointLight2D
@@ -19,7 +21,11 @@ func _ready() -> void:
 
 	_canvas_modulate = CanvasModulate.new()
 	_canvas_modulate.name = "FogDarkness"
-	_canvas_modulate.color = darkness_color
+	_canvas_modulate.color = (
+		Color.WHITE
+		if OS.is_debug_build() and debug_reveal_map
+		else darkness_color
+	)
 	add_child(_canvas_modulate)
 
 	_vision_light = PointLight2D.new()
@@ -30,6 +36,19 @@ func _ready() -> void:
 	_vision_light.range_z_min = -1024
 	_vision_light.range_z_max = 1024
 	player.add_child(_vision_light)
+	_vision_light.enabled = not (
+		OS.is_debug_build() and debug_reveal_map
+	)
+
+
+func set_debug_map_revealed(revealed: bool) -> void:
+	if not OS.is_debug_build():
+		return
+	debug_reveal_map = revealed
+	if _canvas_modulate != null:
+		_canvas_modulate.color = Color.WHITE if revealed else darkness_color
+	if _vision_light != null:
+		_vision_light.enabled = not revealed
 
 
 func _create_vision_texture() -> GradientTexture2D:

@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Characters/Enemies/BossMinionController.gd" id="1_controller"]
+[ext_resource type="PackedScene" path="res://Scenes/Components/health_component.tscn" id="2_health"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_minion"]
+radius = 24.0
+
+[node name="BossMinion" type="CharacterBody2D" node_paths=PackedStringArray("health_component") groups=["enemy", "boss_minion"]]
+collision_layer = 8
+collision_mask = 3
+script = ExtResource("1_controller")
+health_component = NodePath("HealthComponent")
+
+[node name="Shadow" type="Polygon2D" parent="."]
+position = Vector2(0, 15)
+scale = Vector2(1.2, 0.45)
+polygon = PackedVector2Array(-18, 0, -10, -10, 10, -10, 18, 0, 10, 10, -10, 10)
+color = Color(0, 0, 0, 0.35)
+z_index = -1
+
+[node name="BodyVisual" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(0, -30, 23, -9, 17, 23, 0, 14, -17, 23, -23, -9)
+color = Color(0.65, 0.12, 0.9, 1)
+
+[node name="CoreVisual" type="Polygon2D" parent="."]
+scale = Vector2(0.45, 0.45)
+polygon = PackedVector2Array(0, -30, 23, -9, 17, 23, 0, 14, -17, 23, -23, -9)
+color = Color(1, 0.35, 0.25, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_minion")
+
+[node name="HealthComponent" parent="." instance=ExtResource("2_health")]
+max_health = 3

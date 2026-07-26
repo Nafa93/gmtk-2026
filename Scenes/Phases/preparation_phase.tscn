@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://2qkrytjto6am" path="res://Scripts/Rooms/ProceduralRoomGenerator.gd" id="10_room_generator"]
 [ext_resource type="Script" uid="uid://dk2i5g5t55bbi" path="res://Scripts/Rooms/PreparationFogOfWar.gd" id="11_fog"]
 [ext_resource type="PackedScene" path="res://Scenes/Environment/WallTorch.tscn" id="12_torch"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/DefeatScreen.tscn" id="13_defeat"]
+[ext_resource type="PackedScene" path="res://Scenes/Phases/BossEntranceInteractable.tscn" id="14_boss_entrance"]
 
 [node name="PreparationPhase" type="Node2D" unique_id=2091941431 node_paths=PackedStringArray("phase_controller", "hud")]
 script = ExtResource("1_phase")
@@ -23,24 +25,29 @@ position = Vector2(407, 480)
 [node name="Player" parent="." unique_id=1768453675 instance=ExtResource("3_player")]
 position = Vector2(407, 480)
 
-[node name="PreparationPhaseController" type="Node" parent="." unique_id=2089194466 node_paths=PackedStringArray("player", "countdown_timer", "display_tick_timer", "transition_timer")]
+[node name="PreparationPhaseController" type="Node" parent="." unique_id=2089194466 node_paths=PackedStringArray("player", "display_tick_timer", "transition_timer", "boss_hold_timer")]
 script = ExtResource("2_controller")
-total_duration = 10.0
 next_boss_scene = ExtResource("5_boss_scene")
+defeat_scene = ExtResource("13_defeat")
 player = NodePath("../Player")
-countdown_timer = NodePath("CountdownTimer")
 display_tick_timer = NodePath("DisplayTickTimer")
 transition_timer = NodePath("TransitionTimer")
-
-[node name="CountdownTimer" type="Timer" parent="PreparationPhaseController" unique_id=678420233]
-one_shot = true
+boss_hold_timer = NodePath("BossHoldTimer")
 
 [node name="DisplayTickTimer" type="Timer" parent="PreparationPhaseController" unique_id=1779683649]
+wait_time = 0.05
 
 [node name="TransitionTimer" type="Timer" parent="PreparationPhaseController" unique_id=1980115806]
 one_shot = true
 
+[node name="BossHoldTimer" type="Timer" parent="PreparationPhaseController"]
+one_shot = true
+
 [node name="InteractionContainer" type="Node2D" parent="." unique_id=1540823158]
+
+[node name="BossEntranceInteractable" parent="InteractionContainer" node_paths=PackedStringArray("phase_controller") instance=ExtResource("14_boss_entrance")]
+position = Vector2(407, 720)
+phase_controller = NodePath("../../PreparationPhaseController")
 
 [node name="GeneratedRooms" type="Node2D" parent="." unique_id=516448617]
 

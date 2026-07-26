@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_attack")
+damage = 2
 projectile_count = 10
 projectile_speed = 400.0
 wave_count = 7

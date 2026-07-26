@@ -21,11 +21,15 @@
 [ext_resource type="Script" uid="uid://dv7tayn2shk5o" path="res://Scripts/Bosses/States/BossDeadState.gd" id="20_dead"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/FloatingHealthBar.tscn" id="21_health_bar"]
 [ext_resource type="Resource" uid="uid://cg8kbbc04ly24" path="res://Resources/Bosses/FirstBoss/tracking_burst.tres" id="21_tracking"]
+[ext_resource type="Script" path="res://Scripts/Bosses/Components/BossTimeEconomy.gd" id="22_time_economy"]
+[ext_resource type="PackedScene" path="res://Scenes/Characters/Enemies/boss_minion.tscn" id="23_minion"]
+[ext_resource type="Script" path="res://Scripts/Bosses/Components/BossMinionSpawner.gd" id="24_minion_spawner"]
+[ext_resource type="Resource" path="res://Resources/Bosses/FirstBoss/summon_minions.tres" id="25_summon"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_boss"]
 radius = 54.0
 
-[node name="FirstBoss" type="CharacterBody2D" unique_id=899738219 node_paths=PackedStringArray("health_component", "boss_sprite", "collision_shape", "state_machine", "dead_state", "targeting", "attack_scheduler", "projectile_emitter", "telegraph_presenter", "phase_controller") groups=["boss", "enemy"]]
+[node name="FirstBoss" type="CharacterBody2D" unique_id=899738219 node_paths=PackedStringArray("health_component", "boss_sprite", "collision_shape", "state_machine", "dead_state", "targeting", "attack_scheduler", "projectile_emitter", "telegraph_presenter", "phase_controller", "minion_spawner") groups=["boss", "enemy"]]
 collision_layer = 8
 collision_mask = 3
 script = ExtResource("1_controller")
@@ -39,6 +43,7 @@ attack_scheduler = NodePath("BossComponents/AttackScheduler")
 projectile_emitter = NodePath("BossComponents/ProjectileEmitter")
 telegraph_presenter = NodePath("BossComponents/TelegraphPresenter")
 phase_controller = NodePath("BossComponents/PhaseController")
+minion_spawner = NodePath("BossComponents/MinionSpawner")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=979432517]
 modulate = Color(0.7, 0.25, 1, 1)
@@ -77,7 +82,7 @@ script = ExtResource("9_targeting")
 
 [node name="AttackScheduler" type="Node" parent="BossComponents" unique_id=1030044547]
 script = ExtResource("10_scheduler")
-attacks = Array[ExtResource("8_base_attack")]([ExtResource("5_aimed"), ExtResource("21_tracking"), ExtResource("6_radial"), ExtResource("7_charge")])
+attacks = Array[ExtResource("8_base_attack")]([ExtResource("5_aimed"), ExtResource("21_tracking"), ExtResource("6_radial"), ExtResource("7_charge"), ExtResource("25_summon")])
 
 [node name="ProjectileEmitter" type="Node" parent="BossComponents" unique_id=1368048033 node_paths=PackedStringArray("projectile_origin")]
 script = ExtResource("11_emitter")
@@ -94,6 +99,24 @@ attack_audio = NodePath("../../AttackAudio")
 
 [node name="PhaseController" type="Node" parent="BossComponents" unique_id=1056274232]
 script = ExtResource("13_phase")
+
+[node name="TimeEconomy" type="Node" parent="BossComponents" node_paths=PackedStringArray("health_component", "phase_controller")]
+script = ExtResource("22_time_economy")
+health_component = NodePath("../../HealthComponent")
+phase_controller = NodePath("../PhaseController")
+required_charge = 8.0
+charge_time_reward = 2.0
+max_charge_rewards_per_phase = 2
+milestone_interval = 0.25
+milestone_time_reward = 3.0
+
+[node name="MinionSpawner" type="Node" parent="BossComponents"]
+script = ExtResource("24_minion_spawner")
+minion_scene = ExtResource("23_minion")
+maximum_total_minions = 6
+maximum_alive_minions = 2
+spawn_radius = 180.0
+minion_time_reward = 2.0
 
 [node name="StateMachine" type="Node" parent="." unique_id=533892552 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("14_machine")

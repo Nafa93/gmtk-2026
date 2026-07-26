@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BossSummonAttack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Bosses/Attacks/BossSummonAttack.gd" id="1_attack"]
+
+[resource]
+script = ExtResource("1_attack")
+minion_count = 2
+attack_name = "Summon Minions"
+selection_weight = 0.7
+cooldown = 7.0
+minimum_distance = 0.0
+maximum_distance = 1000.0
+telegraph_duration = 1.0
+recovery_duration = 0.8
+telegraph_color = Color(0.35, 1, 0.45, 0.7)

@@ -9,6 +9,7 @@ const ENEMY_PROJECTILE_LAYER: int = 16
 
 @export_range(0.1, 60.0, 0.1, "or_greater") var max_lifetime: float = 5.0
 @export var glow_light: PointLight2D
+@export_range(0.0, 2000.0, 10.0, "or_greater") var knockback_strength: float = 280.0
 
 var direction: Vector2 = Vector2.ZERO
 var speed: float = 0.0
@@ -62,7 +63,18 @@ func _handle_impact(hit_object: Node) -> void:
 
 	var health_component: HealthComponent = _find_health_component(hit_object)
 	if health_component != null:
-		health_component.take_damage(damage)
+		if health_component is TimeHealthComponent:
+			var applied_damage: float = (
+				health_component as TimeHealthComponent
+			).take_time_damage(
+				float(damage),
+				&"enemy_projectile"
+			)
+			var player := _find_player_controller(hit_object)
+			if applied_damage > 0.0 and player != null:
+				player.apply_knockback(global_position, knockback_strength)
+		else:
+			health_component.take_damage(damage)
 
 	queue_free()
 
@@ -87,6 +99,15 @@ func _find_health_component(start_node: Node) -> HealthComponent:
 
 		current_node = current_node.get_parent()
 
+	return null
+
+
+func _find_player_controller(start_node: Node) -> PlayerController:
+	var current_node: Node = start_node
+	while current_node != null:
+		if current_node is PlayerController:
+			return current_node as PlayerController
+		current_node = current_node.get_parent()
 	return null
 
 

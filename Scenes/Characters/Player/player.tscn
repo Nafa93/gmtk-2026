@@ -2,13 +2,12 @@
 
 [ext_resource type="Script" uid="uid://dtiefpuuoq0he" path="res://Scripts/Characters/Player/player_controller.gd" id="1_cqrjx"]
 [ext_resource type="SpriteFrames" uid="uid://b8f85bllyovmj" path="res://Assets/player.tres" id="1_v0iea"]
-[ext_resource type="PackedScene" uid="uid://cpatfwaguns1k" path="res://Scenes/Components/health_component.tscn" id="2_40svl"]
+[ext_resource type="PackedScene" path="res://Scenes/Components/time_health_component.tscn" id="2_40svl"]
 [ext_resource type="PackedScene" uid="uid://d1vgehjd4i5m0" path="res://Scenes/Components/movement_component.tscn" id="3_gy20a"]
 [ext_resource type="PackedScene" uid="uid://cercmh2airn6b" path="res://Scenes/Characters/Player/player_movement_behavior.tscn" id="4_cqrjx"]
 [ext_resource type="Script" uid="uid://dtd8t6phop544" path="res://Scripts/Components/weapon_component.gd" id="5_weapon_component"]
 [ext_resource type="PackedScene" uid="uid://cs2x82cf7p53p" path="res://Scenes/Weapons/Pistol.tscn" id="6_pistol"]
 [ext_resource type="PackedScene" uid="uid://d0fmnxqctl5qd" path="res://Scenes/Weapons/Shotgun.tscn" id="7_shotgun"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/FloatingHealthBar.tscn" id="8_health_bar"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
 radius = 32.0
@@ -30,7 +29,6 @@ autoplay = "idle"
 scale = Vector2(4, 4)
 
 [node name="HealthComponent" parent="." unique_id=1478811520 instance=ExtResource("2_40svl")]
-max_health = 10
 
 [node name="MovementComponent" parent="." unique_id=344136830 node_paths=PackedStringArray("behavior") instance=ExtResource("3_gy20a")]
 speed = 500.0
@@ -56,6 +54,3 @@ position_smoothing_speed = 6.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1155133397]
 shape = SubResource("CircleShape2D_cqrjx")
-
-[node name="FloatingHealthBar" parent="." instance=ExtResource("8_health_bar")]
-bar_color = Color(0.2, 0.9, 0.3, 1)

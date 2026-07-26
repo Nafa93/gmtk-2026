@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_attack")
+contact_damage = 7
 charge_speed = 900.01
 maximum_duration = 0.85
 phase_two_speed_multiplier = 1.35
