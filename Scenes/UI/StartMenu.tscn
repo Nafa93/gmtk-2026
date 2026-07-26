@@ -70,13 +70,13 @@ script = ExtResource("3_button")
 display_font_size = 28
 
 [node name="Quit" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(360, 56)
+custom_minimum_size = Vector2(360, 64)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "QUIT"
 script = ExtResource("3_button")
-display_font_size = 24
+display_font_size = 28
 
 [connection signal="pressed" from="Center/VBox/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Center/VBox/Quit" to="." method="_on_quit_pressed"]

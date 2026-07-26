@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dtd8t6phop544" path="res://Scripts/Components/weapon_component.gd" id="5_weapon_component"]
 [ext_resource type="PackedScene" uid="uid://cs2x82cf7p53p" path="res://Scenes/Weapons/Pistol.tscn" id="6_pistol"]
 [ext_resource type="PackedScene" uid="uid://d0fmnxqctl5qd" path="res://Scenes/Weapons/Shotgun.tscn" id="7_shotgun"]
+[ext_resource type="Script" path="res://Scripts/UI/WeaponSwitchKey.gd" id="8_switch_key"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cqrjx"]
 radius = 32.0
@@ -56,15 +57,21 @@ position_smoothing_speed = 6.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1155133397]
 shape = SubResource("CircleShape2D_cqrjx")
 
-[node name="ReplaceWeaponHint" type="Label" parent="."]
+[node name="ReplaceWeaponHint" type="PanelContainer" parent="." node_paths=PackedStringArray("key_label")]
 z_index = 20
-offset_left = -38.0
-offset_top = -112.0
-offset_right = 38.0
-offset_bottom = -48.0
-theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
-theme_override_colors/font_outline_color = Color(0.025, 0.018, 0.012, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 28
+offset_left = -46.0
+offset_top = -210.0
+offset_bottom = -160.0
+scale = Vector2(2, 2)
+script = ExtResource("8_switch_key")
+key_label = NodePath("Label")
+input_action = &"INTERACT"
+text_center_correction = 14.0
+
+[node name="Label" type="Label" parent="ReplaceWeaponHint"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.105, 0.075, 0.045, 1)
+theme_override_font_sizes/font_size = 12
 text = "E"
 horizontal_alignment = 1
+vertical_alignment = 1

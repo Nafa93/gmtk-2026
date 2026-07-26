@@ -5,7 +5,7 @@ extends CharacterBody2D
 @export var health_component: HealthComponent
 @export var weapon_component: WeaponComponent
 @export var character_sprite: AnimatedSprite2D
-@export var replace_weapon_hint: Label
+@export var replace_weapon_hint: Control
 @export_group("Damage Response")
 @export_range(0.0, 5000.0, 10.0, "or_greater") var knockback_decay: float = 1500.0
 

@@ -58,12 +58,12 @@ script = ExtResource("2_button")
 display_font_size = 28
 
 [node name="Quit" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "QUIT"
 script = ExtResource("2_button")
-display_font_size = 24
+display_font_size = 28
 
 [connection signal="pressed" from="Center/VBox/Retry" to="." method="_on_retry_pressed"]
 [connection signal="pressed" from="Center/VBox/Quit" to="." method="_on_quit_pressed"]

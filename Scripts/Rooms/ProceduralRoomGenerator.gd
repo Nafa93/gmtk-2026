@@ -21,6 +21,7 @@ signal generation_finished(room_count: int, used_seed: int)
 @export_range(140.0, 500.0, 5.0, "or_greater") var minimum_hallway_width: float = 280.0
 @export var torch_scene: PackedScene
 @export_range(200.0, 1000.0, 10.0, "or_greater") var torch_spacing: float = 420.0
+@export_range(80.0, 300.0, 5.0, "or_greater") var loot_edge_margin: float = 120.0
 
 @export_group("Output")
 @export var rooms_container: Node2D
@@ -134,10 +135,23 @@ func _build_room(cell: Vector2i, index: int, occupied: Dictionary) -> void:
 	_add_boundary_wall(room, cell, Vector2i.RIGHT, occupied)
 
 	var weapon_position: Vector2 = _build_puzzle_layout(room, index)
+	weapon_position = _clamp_loot_to_room(weapon_position)
 	var spawn_point := LootSpawnPoint.new()
 	spawn_point.name = "WeaponSpawn_%02d" % (index + 1)
 	spawn_point.position = room.position + weapon_position
 	spawn_points_container.add_child(spawn_point)
+
+
+func _clamp_loot_to_room(local_position: Vector2) -> Vector2:
+	var half_size: Vector2 = room_size * 0.5
+	var safe_half_extents := Vector2(
+		maxf(half_size.x - loot_edge_margin, 0.0),
+		maxf(half_size.y - loot_edge_margin, 0.0)
+	)
+	return Vector2(
+		clampf(local_position.x, -safe_half_extents.x, safe_half_extents.x),
+		clampf(local_position.y, -safe_half_extents.y, safe_half_extents.y)
+	)
 
 
 func _add_boundary_wall(

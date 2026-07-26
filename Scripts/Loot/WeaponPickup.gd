@@ -118,6 +118,7 @@ func _build_preview() -> void:
 	weapon_preview.position = Vector2.ZERO
 	weapon_preview.rotation = 0.0
 	weapon_preview.activate()
+	_center_preview_on_pickup()
 	_align_collision_to_preview()
 
 	if name_label != null:
@@ -125,6 +126,15 @@ func _build_preview() -> void:
 			name_label.text = weapon_preview.data.weapon_name
 		else:
 			name_label.text = weapon_preview.name
+
+
+func _center_preview_on_pickup() -> void:
+	if weapon_preview == null or weapon_preview.weapon_sprite == null:
+		return
+	var sprite_center_in_visual_root: Vector2 = visual_root.to_local(
+		weapon_preview.weapon_sprite.global_position
+	)
+	weapon_preview.position -= sprite_center_in_visual_root
 
 
 func _on_body_entered(body: Node2D) -> void:

@@ -2,6 +2,7 @@ class_name WeaponSwitchKey
 extends PanelContainer
 
 @export var key_label: Label
+@export var input_action: StringName = &"CHANGE_WEAPON"
 @export_range(1.0, 10.0, 1.0) var press_depth: float = 6.0
 @export_range(0.01, 0.3, 0.01, "or_greater") var press_duration: float = 0.07
 @export_range(-20.0, 20.0, 1.0) var text_center_correction: float = 3.0
@@ -14,13 +15,14 @@ var _label_correction_applied: bool = false
 
 func _ready() -> void:
 	set_process(true)
+	add_theme_stylebox_override(&"panel", StyleBoxEmpty.new())
 	if key_label != null:
 		call_deferred(&"_initialize_label_layout")
 	queue_redraw()
 
 
 func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed(&"CHANGE_WEAPON"):
+	if Input.is_action_just_pressed(input_action):
 		_animate_press()
 	if _label_correction_applied:
 		_apply_label_transform()
@@ -30,7 +32,7 @@ func _draw() -> void:
 	var width: float = size.x
 	var height: float = size.y
 	var pressed_offset: float = roundf(_press_amount * press_depth)
-	var shadow_color := Color(0.025, 0.018, 0.012, 0.96)
+	var shadow_color := Color(0.16, 0.075, 0.04, 0.98)
 	var edge_color := Color(0.48, 0.22, 0.13, 1.0)
 	var face_color := Color(0.84, 0.64, 0.28, 1.0)
 
@@ -50,6 +52,7 @@ func _draw() -> void:
 
 	var edge := _key_polygon(width, height - 9, pressed_offset)
 	draw_colored_polygon(edge, edge_color)
+
 	var face := _key_polygon(width - 8, height - 17, pressed_offset + 4.0)
 	for index: int in range(face.size()):
 		face[index].x += 4.0
