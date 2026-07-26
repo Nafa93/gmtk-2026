@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/PreparationHUD.gd" id="1_hud"]
 [ext_resource type="Script" path="res://Scripts/UI/WeaponSwitchKey.gd" id="2_switch_key"]
 [ext_resource type="Script" path="res://Scripts/UI/WesternKeyPanel.gd" id="3_key_panel"]
+[ext_resource type="Script" path="res://Scripts/UI/WesternButton.gd" id="4_button"]
 
 [sub_resource type="StyleBoxFlat" id="WeaponCardStyle"]
 bg_color = Color(0.075, 0.052, 0.036, 0.96)
@@ -22,7 +23,7 @@ content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="KeycapStyle"]
 
-[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "primary_weapon_icon", "secondary_weapon_icon", "warning_label", "boss_prompt_label", "boss_hold_progress", "warning_audio")]
+[node name="PreparationHUD" type="CanvasLayer" node_paths=PackedStringArray("timer_label", "feedback_label", "primary_weapon_label", "secondary_weapon_label", "primary_weapon_icon", "secondary_weapon_icon", "warning_label", "boss_prompt_label", "boss_hold_progress", "warning_audio", "pause_button", "pause_overlay", "resume_button", "main_menu_button")]
 script = ExtResource("1_hud")
 timer_label = NodePath("TopLeft/VBox/TimeRow/TimerLabel")
 feedback_label = NodePath("TopLeft/VBox/TimeRow/FeedbackLabel")
@@ -34,6 +35,10 @@ warning_label = NodePath("WarningLabel")
 boss_prompt_label = NodePath("BossPrompt")
 boss_hold_progress = NodePath("BossHoldProgress")
 warning_audio = NodePath("WarningAudio")
+pause_button = NodePath("PauseButton")
+pause_overlay = NodePath("PauseOverlay")
+resume_button = NodePath("PauseOverlay/Center/VBox/Buttons/Resume")
+main_menu_button = NodePath("PauseOverlay/Center/VBox/Buttons/MainMenu")
 
 [node name="TopLeft" type="MarginContainer" parent="."]
 offset_right = 360.0
@@ -207,3 +212,73 @@ text = "EMPTY"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="PauseButton" type="Button" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -154.0
+offset_top = 28.0
+offset_right = -26.0
+offset_bottom = 84.0
+grow_horizontal = 0
+text = "PAUSE"
+script = ExtResource("4_button")
+display_font_size = 16
+text_vertical_offset = 10.0
+hover_scale = 1.05
+
+[node name="PauseOverlay" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dimmer" type="ColorRect" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.025, 0.018, 0.012, 0.82)
+
+[node name="Center" type="CenterContainer" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="PauseOverlay/Center"]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Title" type="Label" parent="PauseOverlay/Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.28, 1)
+theme_override_font_sizes/font_size = 48
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="Buttons" type="VBoxContainer" parent="PauseOverlay/Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="Resume" type="Button" parent="PauseOverlay/Center/VBox/Buttons"]
+custom_minimum_size = Vector2(440, 64)
+layout_mode = 2
+text = "RESUME"
+script = ExtResource("4_button")
+display_font_size = 26
+
+[node name="MainMenu" type="Button" parent="PauseOverlay/Center/VBox/Buttons"]
+custom_minimum_size = Vector2(440, 64)
+layout_mode = 2
+text = "MAIN MENU"
+script = ExtResource("4_button")
+display_font_size = 26

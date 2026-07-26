@@ -11,6 +11,11 @@ extends CanvasLayer
 @export var boss_prompt_label: Label
 @export var boss_hold_progress: ProgressBar
 @export var warning_audio: AudioStreamPlayer
+@export var pause_button: Button
+@export var pause_overlay: Control
+@export var resume_button: Button
+@export var main_menu_button: Button
+@export_file("*.tscn") var main_menu_scene_path: String = "res://Scenes/UI/StartMenu.tscn"
 @export var show_time_feedback: bool = true
 @export var normal_timer_color: Color = Color(0.94, 0.84, 0.63)
 @export var warning_timer_color: Color = Color(0.66, 0.29, 0.18)
@@ -24,12 +29,62 @@ var _feedback_generation: int = 0
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	if warning_label != null:
 		warning_label.visible = false
 	if feedback_label != null:
 		feedback_label.visible = false
 	if boss_hold_progress != null:
 		boss_hold_progress.value = 0.0
+	if pause_overlay != null:
+		pause_overlay.visible = false
+	if pause_button != null and not pause_button.pressed.is_connected(_pause_game):
+		pause_button.pressed.connect(_pause_game)
+	if resume_button != null and not resume_button.pressed.is_connected(_resume_game):
+		resume_button.pressed.connect(_resume_game)
+	if (
+		main_menu_button != null
+		and not main_menu_button.pressed.is_connected(_return_to_main_menu)
+	):
+		main_menu_button.pressed.connect(_return_to_main_menu)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if (
+		event is InputEventKey
+		and event.pressed
+		and not event.echo
+		and event.keycode == KEY_ESCAPE
+	):
+		get_viewport().set_input_as_handled()
+		if get_tree().paused:
+			_resume_game()
+		else:
+			_pause_game()
+
+
+func _pause_game() -> void:
+	if get_tree().paused:
+		return
+	get_tree().paused = true
+	if pause_overlay != null:
+		pause_overlay.visible = true
+	if resume_button != null:
+		resume_button.grab_focus()
+
+
+func _resume_game() -> void:
+	if pause_overlay != null:
+		pause_overlay.visible = false
+	get_tree().paused = false
+	if pause_button != null:
+		pause_button.grab_focus()
+
+
+func _return_to_main_menu() -> void:
+	get_tree().paused = false
+	if not main_menu_scene_path.is_empty():
+		get_tree().change_scene_to_file(main_menu_scene_path)
 
 
 func _process(_delta: float) -> void:
